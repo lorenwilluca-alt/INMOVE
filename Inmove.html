@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INMOVE — Sistema de Treino</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--lar:#FF6B2B;--lar2:#cc4f10;--az:#1E6FD9;--az2:#1458b0;--bg:#0a0a0a;--c1:#141414;--c2:#1c1c1c;--c3:#252525;--c4:#303030;--txt:#888;--borda:#262626;--branco:#f4f1ec;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--branco);font-family:"DM Sans",sans-serif;font-size:14px;}
+.topbar{position:fixed;top:0;left:0;right:0;height:52px;background:var(--c1);border-bottom:1px solid var(--borda);display:flex;align-items:center;padding:0 14px;gap:10px;z-index:300;}
+.mbtn{width:34px;height:34px;border:1px solid var(--borda);border-radius:7px;background:transparent;color:var(--branco);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0;}
+.mbtn:hover{border-color:var(--lar);color:var(--lar);}
+.logo-fb{font-family:"Syne",sans-serif;font-weight:800;font-size:20px;letter-spacing:-1px;}
+.logo-fb .in{color:var(--lar);}.logo-fb .mv{color:var(--az);}
+.lsep{width:1px;height:18px;background:var(--borda);margin:0 6px;}
+.lsub{font-size:10px;color:var(--txt);text-transform:uppercase;letter-spacing:1.5px;}
+.topbar-r{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.btn-back{background:transparent;color:var(--txt);border:1px solid var(--borda);padding:7px 12px;border-radius:6px;font-size:12px;cursor:pointer;display:none;align-items:center;gap:5px;transition:.15s;}
+.btn-back.vis{display:flex;}.btn-back:hover{color:var(--branco);border-color:var(--branco);}
+.btn-cta{background:var(--lar);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;cursor:pointer;transition:.15s;}
+.btn-cta:hover{background:var(--lar2);}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:199;opacity:0;pointer-events:none;transition:.2s;}
+.ov.on{opacity:1;pointer-events:all;}
+.sb{position:fixed;top:52px;left:0;bottom:0;width:220px;background:var(--c1);border-right:1px solid var(--borda);z-index:200;transform:translateX(-100%);transition:.25s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+.sb.on{transform:none;}
+.sb-sec{padding:14px 16px 4px;font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#444;}
+.sbi{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;color:var(--txt);font-size:13px;border-left:3px solid transparent;transition:.15s;}
+.sbi:hover{background:var(--c2);color:var(--branco);}
+.sbi.on{color:var(--lar);border-left-color:var(--lar);background:rgba(255,107,43,.06);}
+.main{margin-top:52px;padding:20px 16px;}
+.pg{display:none;animation:fd .2s ease;}.pg.on{display:block;}
+@keyframes fd{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.gcol{grid-column:1/-1;}
+.card{background:var(--c1);border:1px solid var(--borda);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.ch{padding:12px 15px;border-bottom:1px solid var(--borda);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.ct{font-family:"Syne",sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;}
+.cb{padding:15px;}
+.flbl{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);margin-bottom:5px;}
+.finp,.fsel,.ftxt{width:100%;background:var(--c2);border:1px solid var(--borda);border-radius:6px;padding:9px 11px;color:var(--branco);font-family:"DM Sans",sans-serif;font-size:13px;outline:none;transition:.15s;}
+.finp:focus,.fsel:focus,.ftxt:focus{border-color:var(--lar);}
+.fsel option{background:var(--c2);}
+.ftxt{min-height:65px;resize:vertical;}
+.fg{margin-bottom:12px;}
+.ftit{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--lar);margin:14px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--borda);}
+.ftit.az{color:var(--az);}
+.badge{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:500;text-transform:uppercase;}
+.bl{background:rgba(255,107,43,.15);color:var(--lar);}.ba{background:rgba(30,111,217,.15);color:var(--az);}
+.bv{background:rgba(0,200,100,.15);color:#00c864;}.bam{background:rgba(255,200,0,.15);color:#ffc800;}
+.bcz{background:var(--c3);color:var(--txt);}
+.acoes{display:flex;gap:9px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap;}
+.bpri{background:var(--lar);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;cursor:pointer;transition:.15s;}
+.bpri:hover{background:var(--lar2);}
+.baz{background:var(--az);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;cursor:pointer;transition:.15s;}
+.bsec{background:transparent;color:var(--branco);border:1px solid var(--borda);padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer;transition:.15s;}
+.bsec:hover{border-color:var(--branco);}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.alc{background:var(--c1);border:1px solid var(--borda);border-radius:10px;padding:16px;cursor:pointer;transition:.2s;}
+.alc:hover{border-color:var(--lar);transform:translateY(-2px);}
+.alc-av{width:44px;height:44px;background:var(--c3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-weight:800;font-size:15px;color:var(--lar);margin-bottom:10px;}
+.alc-nome{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;}
+.alc-info{font-size:12px;color:var(--txt);line-height:1.7;}
+.alc-ft{margin-top:10px;padding-top:9px;border-top:1px solid var(--borda);display:flex;justify-content:space-between;align-items:center;}
+.tag{font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(255,107,43,.1);color:var(--lar);text-transform:uppercase;}
+.alc-add{border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;min-height:130px;}
+.perfil-header{background:linear-gradient(135deg,rgba(255,107,43,.08),rgba(30,111,217,.05));border:1px solid var(--borda);border-radius:10px;padding:18px;display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap;}
+.pfav{width:56px;height:56px;background:var(--c3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-weight:800;font-size:20px;color:var(--lar);flex-shrink:0;}
+.pfnome{font-family:"Syne",sans-serif;font-weight:800;font-size:18px;}
+.pfsub{font-size:12px;color:var(--txt);margin-top:2px;}
+.pftags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.ptabs{display:flex;gap:0;border:1px solid var(--borda);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.ptab{flex:1;padding:11px 6px;text-align:center;cursor:pointer;color:var(--txt);font-size:11px;font-family:"Syne",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.3px;border-right:1px solid var(--borda);background:var(--c1);transition:.15s;}
+.ptab:last-child{border-right:none;}
+.ptab:hover{background:var(--c2);color:var(--branco);}
+.ptab.on{background:rgba(255,107,43,.07);color:var(--lar);border-bottom:3px solid var(--lar);}
+.psec{display:none;}.psec.on{display:block;}
+.fp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.fp-card{background:var(--c2);border:1px solid var(--borda);border-radius:8px;overflow:hidden;}
+.fp-slot{aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:5px;position:relative;overflow:hidden;transition:.15s;}
+.fp-slot:hover{background:var(--c3);}
+.fp-slot input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.fp-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none;}
+.fp-ico{font-size:24px;color:var(--txt);position:relative;z-index:0;}
+.fp-txt{font-size:9px;color:var(--txt);position:relative;z-index:0;}
+.fp-info{padding:8px;border-top:1px solid var(--borda);text-align:center;}
+.fp-nome{font-family:"Syne",sans-serif;font-weight:800;font-size:12px;}
+.tb2{background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:13px;margin-bottom:10px;}
+.tnome{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.tnome::before{content:"";width:5px;height:5px;background:var(--lar);border-radius:50%;flex-shrink:0;}
+.opcoes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.op{padding:5px 11px;border:1px solid var(--borda);border-radius:20px;background:transparent;color:var(--txt);font-size:11px;cursor:pointer;transition:.15s;}
+.op:hover{border-color:var(--lar);color:var(--branco);}
+.op.on{background:var(--lar);color:#fff;border-color:var(--lar);font-weight:600;}
+.lado2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+.llbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);margin-bottom:4px;}
+.vt-wrap{margin-top:10px;padding-top:10px;border-top:1px solid var(--borda);}
+.vt-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);margin-bottom:7px;}
+.vt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
+.vslot{background:var(--c3);border:1px dashed var(--borda);border-radius:7px;aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;position:relative;overflow:hidden;transition:.15s;}
+.vslot:hover{border-color:var(--lar);}
+.vslot input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.vslot video,.vslot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none;}
+.vi{font-size:16px;color:var(--txt);position:relative;z-index:0;}
+.vt2{font-size:9px;color:var(--txt);position:relative;z-index:0;text-align:center;padding:0 4px;}
+.vok{position:absolute;top:3px;right:3px;background:rgba(0,200,100,.9);border-radius:50%;width:14px;height:14px;font-size:8px;display:none;align-items:center;justify-content:center;z-index:3;color:#fff;font-weight:700;}
+.prog-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.ps{background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:12px;text-align:center;}
+.ps-val{font-family:"Syne",sans-serif;font-weight:800;font-size:18px;color:var(--lar);}
+.ps-lbl{font-size:10px;color:var(--txt);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+.ps-d{font-size:11px;margin-top:3px;}
+.dpos{color:#00c864;}.dneg{color:#ff5050;}
+.treino-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.tc{background:var(--c2);border:1px solid var(--borda);border-radius:9px;padding:14px;cursor:pointer;transition:.2s;}
+.tc:hover{border-color:var(--lar);transform:translateY(-2px);}
+.tc-nome{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;margin-bottom:4px;}
+.tc-info{font-size:11px;color:var(--txt);line-height:1.7;}
+.tc-add{border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:80px;text-align:center;}
+.sem-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.stab{padding:6px 13px;border:1px solid var(--borda);border-radius:20px;background:transparent;color:var(--txt);font-size:12px;cursor:pointer;transition:.15s;}
+.stab:hover,.stab.on{background:var(--az);color:#fff;border-color:var(--az);}
+.add-sem{padding:6px 10px;border:1px dashed var(--borda);border-radius:20px;background:transparent;color:var(--txt);font-size:12px;cursor:pointer;transition:.15s;}
+.add-sem:hover{border-color:var(--az);color:var(--az);}
+.ex-header{display:grid;grid-template-columns:1fr 52px 52px 52px 52px 26px;gap:7px;padding:4px 12px;margin-bottom:4px;}
+.xh{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--txt);text-align:center;}
+.xh:first-child{text-align:left;}
+.ex-lista{display:flex;flex-direction:column;gap:5px;}
+.xi{background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:9px 11px;display:grid;grid-template-columns:1fr 52px 52px 52px 52px 26px;gap:7px;align-items:center;transition:.15s;}
+.xi:hover{border-color:rgba(255,107,43,.3);}
+.xi.corr{border-left:3px solid var(--az);}
+.xi.lib{border-left:3px solid var(--c4);}
+.xnome{background:transparent;border:none;color:var(--branco);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;width:100%;outline:none;padding:2px 0;}
+.xnome:focus{border-bottom:1px solid var(--lar);}
+.xobs{background:transparent;border:none;color:var(--txt);font-family:"DM Sans",sans-serif;font-size:11px;width:100%;outline:none;padding:1px 0;margin-top:2px;}
+.xnum{background:var(--c3);border:1px solid var(--borda);border-radius:5px;padding:5px 3px;font-family:"Syne",sans-serif;font-weight:700;font-size:12px;text-align:center;width:100%;outline:none;color:var(--lar);}
+.xnum:focus{border-color:var(--lar);}
+.xnum.az{color:var(--az);}
+.xdel{background:transparent;border:none;color:var(--txt);cursor:pointer;font-size:16px;transition:.15s;padding:2px;}
+.xdel:hover{color:#ff4444;}
+.xcol{display:flex;flex-direction:column;}
+.add-ex{display:flex;align-items:center;gap:6px;padding:9px;border:1px dashed var(--borda);border-radius:7px;background:transparent;color:var(--txt);font-size:12px;cursor:pointer;transition:.15s;margin-top:7px;width:100%;justify-content:center;}
+.add-ex:hover{border-color:var(--lar);color:var(--lar);}
+.fase-div{font-family:"Syne",sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--txt);padding:10px 0 6px;border-bottom:1px solid var(--borda);margin-bottom:5px;}
+.banco-wrap{background:rgba(30,111,217,.06);border:1px solid rgba(30,111,217,.2);border-radius:8px;padding:12px;margin-bottom:12px;}
+.banco-titulo{font-size:10px;font-family:"Syne",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--az);margin-bottom:8px;}
+.banco-busca{width:100%;background:var(--c2);border:1px solid var(--borda);border-radius:6px;padding:8px 11px;color:var(--branco);font-size:13px;outline:none;transition:.15s;}
+.banco-busca:focus{border-color:var(--az);}
+.banco-res{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;max-height:100px;overflow-y:auto;}
+.bi{padding:4px 10px;border:1px solid rgba(30,111,217,.3);border-radius:20px;background:transparent;color:var(--az);font-size:11px;cursor:pointer;transition:.15s;}
+.bi:hover{background:var(--az);color:#fff;}
+.ia-box{background:rgba(255,107,43,.05);border:1px solid rgba(255,107,43,.2);border-radius:8px;padding:14px;margin-bottom:12px;}
+.ia-tit{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--lar);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.dot{display:flex;gap:3px;}
+.dot span{width:5px;height:5px;background:var(--lar);border-radius:50%;animation:pulse 1.2s infinite;}
+.dot span:nth-child(2){animation-delay:.2s;}.dot span:nth-child(3){animation-delay:.4s;}
+@keyframes pulse{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.pse-esc{display:flex;gap:4px;margin-top:8px;}
+.pb{flex:1;aspect-ratio:1;border:1px solid var(--borda);border-radius:6px;background:transparent;color:var(--txt);font-family:"Syne",sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:.15s;}
+.pb:hover{border-color:var(--lar);color:var(--lar);}
+.pb.on{background:var(--lar);color:#fff;border-color:var(--lar);}
+.pse-ref{font-size:11px;color:var(--txt);margin-top:5px;min-height:16px;}
+.phi{background:var(--c2);border:1px solid var(--borda);border-radius:7px;padding:10px 13px;display:flex;align-items:center;gap:12px;margin-bottom:7px;}
+.phi-num{font-family:"Syne",sans-serif;font-weight:800;font-size:20px;color:var(--lar);min-width:28px;text-align:center;}
+.etapas{display:flex;border:1px solid var(--borda);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.etapa{flex:1;padding:10px 4px;text-align:center;background:var(--c1);cursor:pointer;border-right:1px solid var(--borda);transition:.15s;}
+.etapa:last-child{border-right:none;}
+.etapa.on{background:rgba(255,107,43,.07);border-bottom:3px solid var(--lar);}
+.etapa.ok .en{color:var(--az);}
+.en{font-family:"Syne",sans-serif;font-weight:800;font-size:13px;color:var(--txt);line-height:1;}
+.etapa.on .en{color:var(--lar);}
+.enm{font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:var(--txt);margin-top:3px;}
+.etapa.on .enm{color:var(--branco);}
+.esec{display:none;}.esec.on{display:block;}
+.notif{position:fixed;bottom:18px;right:18px;background:var(--lar);color:#fff;padding:10px 16px;border-radius:7px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;transform:translateY(70px);opacity:0;transition:.3s;z-index:999;}
+.notif.on{transform:none;opacity:1;}
+/* RELATÓRIO */
+.rel-prev{background:white;color:#111;border-radius:10px;padding:28px;font-family:"DM Sans",sans-serif;font-size:13px;line-height:1.6;}
+.rel-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #FF6B2B;padding-bottom:14px;margin-bottom:18px;}
+.rel-logo{font-family:"Syne",sans-serif;font-weight:800;font-size:22px;letter-spacing:-1px;}
+.rel-logo .in{color:#FF6B2B;}.rel-logo .mv{color:#1E6FD9;}
+.rel-tit{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;margin-bottom:3px;}
+.rel-sub{font-size:12px;color:#666;}
+.rel-sec{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#FF6B2B;margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid #eee;}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.rel-item{background:#f9f9f9;border-radius:7px;padding:10px 12px;}
+.rel-item-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:3px;}
+.rel-item-val{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;color:#FF6B2B;}
+.rel-achado{display:flex;gap:7px;font-size:12px;margin-bottom:5px;}
+.rel-achado::before{content:"→";color:#1E6FD9;flex-shrink:0;}
+.rel-pse-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden;margin-top:4px;}
+.rel-pse-fill{height:100%;background:linear-gradient(90deg,#FF6B2B,#1E6FD9);border-radius:4px;}
+@media(max-width:600px){.ag,.g2,.g3,.g4,.lado2,.fp-grid,.treino-cards,.prog-stats{grid-template-columns:1fr;}.fp-grid{grid-template-columns:repeat(3,1fr);}.xi,.ex-header{grid-template-columns:1fr 44px 44px 44px 44px 22px;}}
+</style>
+</head>
+<body>
+<div class="pg on" id="pg-alunos">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;">Alunos</div>
+    <button class="btn-cta" onclick="irPg('nova-aval')">+ Novo Aluno</button>
+  </div>
+  <div class="ag" id="lista-alunos">
+    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--txt);">
+      <div>Carregando...</div>
+    </div>
+  </div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBGc2Gn2Noi8bqb42ASj9DTWiWgKhrUIv4",
+  authDomain: "inmove-academia.firebaseapp.com",
+  projectId: "inmove-academia",
+  storageBucket: "inmove-academia.firebasestorage.app",
+  messagingSenderId: "427672029377",
+  appId: "inmove-web"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function carregarAlunos() {
+  const cont = document.getElementById('lista-alunos');
+  if(!cont) return;
+  try {
+    const snap = await getDocs(collection(db, "alunos"));
+    const alunos = [];
+    snap.forEach(d => alunos.push({id:d.id, ...d.data()}));
+    
+    if(alunos.length === 0) {
+      cont.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--txt);">
+          <div style="font-size:32px;margin-bottom:10px;">&#x1F465;</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--branco);margin-bottom:6px;">Nenhum aluno ainda</div>
+          <div style="font-size:13px;margin-bottom:16px;">Comece adicionando o primeiro aluno</div>
+          <button class="btn-cta" onclick="irPg('nova-aval')">+ Adicionar Primeiro Aluno</button>
+        </div>`;
+      return;
+    }
+
+    cont.innerHTML = alunos.map(a => {
+      const ini = (a.nome||'?').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+      return `
+        <div class="alc" onclick="abrirAluno('${a.id}','${(a.nome||'').replace(/'/g,"\\'")}','${a.objetivo||'Geral'}','${a.dataCriacao||''}')">
+          <div class="alc-av">${ini}</div>
+          <div class="alc-nome">${a.nome||'Sem nome'}</div>
+          <div class="alc-info">&#x1F4C5; ${a.dataCriacao||''}<br>&#x1F3AF; ${a.objetivo||'Geral'}</div>
+          <div class="alc-ft"><span class="tag">${a.objetivo||'Geral'}</span><span class="badge bv">Ativo</span></div>
+        </div>`;
+    }).join('') + `
+      <div class="alc alc-add" onclick="irPg('nova-aval')">
+        <div style="font-size:22px;color:var(--txt)">+</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;">Novo Aluno</div>
+        <div style="font-size:12px;color:var(--txt)">Iniciar avalia&#xe7;&#xe3;o</div>
+      </div>`;
+  } catch(e) {
+    cont.innerHTML = '<div style="grid-column:1/-1;padding:20px;color:var(--txt);text-align:center;">Verifique a conex&#xe3;o.</div>';
+    console.error(e);
+  }
+}
+
+window.fbSalvarNovoAluno = async function() {
+  const nome = document.getElementById('novo-nome')?.value?.trim();
+  if(!nome) { alert('Digite o nome do aluno!'); return false; }
+  const obj = document.getElementById('novo-obj')?.value || 'Geral';
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const id = nome.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now();
+  try {
+    await setDoc(doc(db,"alunos",id), {nome, objetivo:obj, dataCriacao:hoje, status:'ativo'});
+    return true;
+  } catch(e) { console.error(e); return false; }
+};
+
+window.fbSalvarPSE = async function(dados) {
+  try { await addDoc(collection(db,"pse"), {...dados, ts:new Date().toISOString()}); return true; }
+  catch(e) { return false; }
+};
+
+// Interceptar navegação para recarregar alunos
+document.addEventListener('click', function(e) {
+  setTimeout(() => {
+    const pg = document.getElementById('pg-alunos');
+    if(pg && pg.classList.contains('on')) carregarAlunos();
+  }, 300);
+});
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    carregarAlunos();
+    const n = document.getElementById('notif');
+    if(n){ n.textContent='&#x1F525; Firebase conectado!'; n.classList.add('on'); setTimeout(()=>n.classList.remove('on'),2500); }
+  }, 1200);
+});
+</script>
+
+
+<div class="topbar">
+  <button class="mbtn" onclick="toggleMenu()">☰</button>
+  <div class="logo-fb"><span class="in">IN</span><span class="mv">MOVE</span></div>
+  <div class="lsep"></div><span class="lsub">Sistema de Treino</span>
+  <div class="topbar-r">
+    <button class="btn-back" id="btn-back" onclick="voltarAlunos()">← Alunos</button>
+    <button class="bsec" onclick="salvarDados()" style="font-size:11px;padding:7px 11px;">💾 Salvar</button><button class="btn-cta" onclick="irPg('nova-aval')">+ Avaliação</button>
+  </div>
+</div>
+<div class="ov" id="ov" onclick="fecharMenu()"></div>
+<div class="sb" id="sb">
+  <div class="sb-sec">Principal</div>
+  <div class="sbi on" onclick="irPg('alunos')">◎ Alunos</div>
+  <div class="sb-sec">Avaliação</div>
+  <div class="sbi" onclick="irPg('nova-aval')">✦ Nova Avaliação</div>
+  <div class="sb-sec">Sessão</div>
+  <div class="sbi" onclick="irPg('pse')">🎯 Registrar PSE</div>
+</div>
+
+<div class="main">
+
+<!-- ══ ALUNOS ══ -->
+<div class="pg on" id="pg-alunos-OLD" style="display:none">
+  <div class="ag">
+    <div class="alc" onclick="abrirAluno('DM','Delmir Marques','Hipertrofia + Postural','06/11/2023')">
+      <div class="alc-av">DM</div><div class="alc-nome">Delmir Marques</div>
+      <div class="alc-info">📅 06/11/2023 · Hipertrofia<br>🏋️ 3 treinos · 5 semanas<br>⚠️ QL esq. · Escoliose funcional</div>
+      <div class="alc-ft"><span class="tag">Hipertrofia</span><span class="badge bv">Ativo</span></div>
+    </div>
+    <div class="alc" onclick="abrirAluno('LM','Larissa Marques','Emagrecimento','20/12/2023')">
+      <div class="alc-av">LM</div><div class="alc-nome">Larissa Marques</div>
+      <div class="alc-info">📅 20/12/2023 · Emagrecimento<br>🏋️ 3 treinos · 4 semanas<br>⚠️ Drop pélvico dir.</div>
+      <div class="alc-ft"><span class="tag">Emagrecimento</span><span class="badge bv">Ativo</span></div>
+    </div>
+    <div class="alc" onclick="abrirAluno('SA','Samara Alves','Saúde','25/10/2023')">
+      <div class="alc-av">SA</div><div class="alc-nome">Samara Alves</div>
+      <div class="alc-info">📅 25/10/2023 · Saúde<br>⚠️ Sem treino ainda</div>
+      <div class="alc-ft"><span class="tag">Saúde</span><span class="badge bam">Pendente</span></div>
+    </div>
+    <div class="alc" onclick="abrirAluno('CD','Claudia Damian','Correção Postural','17/10/2023')">
+      <div class="alc-av">CD</div><div class="alc-nome">Claudia Damian</div>
+      <div class="alc-info">📅 17/10/2023 · Postural<br>🏋️ 2 treinos · 3 semanas</div>
+      <div class="alc-ft"><span class="tag">Postural</span><span class="badge bv">Ativo</span></div>
+    </div>
+    <div class="alc alc-add" onclick="irPg('nova-aval')">
+      <div style="font-size:22px;color:var(--txt)">+</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;">Novo Aluno</div>
+      <div style="font-size:12px;color:var(--txt)">Iniciar avaliação</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PERFIL DO ALUNO ══ -->
+<div class="pg" id="pg-perfil">
+  <div class="perfil-header">
+    <div class="pfav" id="pfav">DM</div>
+    <div style="flex:1;">
+      <div class="pfnome" id="pfnome">Delmir Marques</div>
+      <div class="pfsub" id="pfsub">Avaliação: 06/11/2023 · Hipertrofia + Postural</div>
+      <div class="pftags" id="pftags">
+        <span class="badge bl">QL Esq. Hiperativo</span>
+        <span class="badge ba">Glúteo Esq. Fraco</span>
+        <span class="badge bam">Escoliose Funcional</span>
+        <span class="badge bcz">Quadril 3D Limitado</span>
+      </div>
+    </div>
+    <button class="baz" onclick="abrirRelatorio()" style="flex-shrink:0;">📄 Gerar Relatório</button>
+  </div>
+
+  <div class="ptabs">
+    <div class="ptab on" onclick="ptab(this,'pt-fotos')">📷 Fotos & Testes</div>
+    <div class="ptab" onclick="ptab(this,'pt-prog')">📈 Progressão</div>
+    <div class="ptab" onclick="ptab(this,'pt-treinos')">🏋️ Treinos</div>
+    <div class="ptab" onclick="ptab(this,'pt-pse')">🎯 PSE</div>
+  </div>
+
+  <!-- FOTOS & TESTES -->
+  <div class="psec on" id="pt-fotos">
+    <div class="card">
+      <div class="ch"><div class="ct">📷 Fotos Posturais</div><span class="badge bcz">06/11/2023</span></div>
+      <div class="cb">
+        <div class="fp-grid">
+          <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">🧍</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">FRENTE</div></div></div>
+          <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">🧍</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--az)">LADO</div></div></div>
+          <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">🧍</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">COSTAS</div></div></div>
+        </div>
+        <button class="bsec" style="font-size:11px;padding:6px 12px;margin-top:4px;" onclick="notif('Nova data adicionada!')">+ Nova data de fotos</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div class="ct">🔬 Testes Funcionais</div><span class="badge bl">Vídeo: frontal · posterior · lateral</span></div>
+      <div class="cb" id="testes-container">
+        <!-- Testes gerados via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESSÃO -->
+  <div class="psec" id="pt-prog">
+    <div class="prog-stats">
+      <div class="ps"><div class="ps-val">−3.2<span style="font-size:12px;">kg</span></div><div class="ps-lbl">Gordura perdida</div><div class="ps-d dpos">▼ 3.2kg desde jan</div></div>
+      <div class="ps"><div class="ps-val" style="color:var(--az);">+1.8<span style="font-size:12px;">kg</span></div><div class="ps-lbl">Músculo ganho</div><div class="ps-d dpos">▲ 1.8kg desde jan</div></div>
+      <div class="ps"><div class="ps-val">7.4</div><div class="ps-lbl">PSE médio</div><div class="ps-d" style="color:var(--txt);">Borg alvo: 7–8</div></div>
+      <div class="ps"><div class="ps-val" style="color:var(--az);">5</div><div class="ps-lbl">Semanas ativas</div><div class="ps-d dpos">▲ Progredindo</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div class="ct">Evolução de Medidas</div><button class="bsec" style="font-size:11px;padding:5px 10px;" onclick="notif('Medidas salvas!')">+ Nova medição</button></div>
+      <div class="cb" style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead><tr style="border-bottom:1px solid var(--borda);">
+            <th style="text-align:left;padding:7px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);">Medida</th>
+            <th style="padding:7px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);">Jan/24</th>
+            <th style="padding:7px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);">Fev/24</th>
+            <th style="padding:7px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);">Mar/24</th>
+            <th style="padding:7px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);">Δ</th>
+          </tr></thead>
+          <tbody id="tbl-medidas">
+            <tr style="border-bottom:1px solid rgba(38,38,38,.6);"><td style="padding:8px 10px;">Peso (kg)</td><td style="padding:8px 10px;text-align:center;">88.0</td><td style="padding:8px 10px;text-align:center;">86.2</td><td style="padding:8px 10px;text-align:center;">84.8</td><td style="padding:8px 10px;text-align:center;color:#00c864;">−3.2kg</td></tr>
+            <tr style="border-bottom:1px solid rgba(38,38,38,.6);"><td style="padding:8px 10px;">% Gordura</td><td style="padding:8px 10px;text-align:center;">24.1%</td><td style="padding:8px 10px;text-align:center;">22.8%</td><td style="padding:8px 10px;text-align:center;">21.4%</td><td style="padding:8px 10px;text-align:center;color:#00c864;">−2.7%</td></tr>
+            <tr style="border-bottom:1px solid rgba(38,38,38,.6);"><td style="padding:8px 10px;">Massa Muscular (kg)</td><td style="padding:8px 10px;text-align:center;">31.2</td><td style="padding:8px 10px;text-align:center;">32.1</td><td style="padding:8px 10px;text-align:center;">33.0</td><td style="padding:8px 10px;text-align:center;color:var(--az);">+1.8kg</td></tr>
+            <tr style="border-bottom:1px solid rgba(38,38,38,.6);"><td style="padding:8px 10px;">Cintura (cm)</td><td style="padding:8px 10px;text-align:center;">92</td><td style="padding:8px 10px;text-align:center;">90</td><td style="padding:8px 10px;text-align:center;">88</td><td style="padding:8px 10px;text-align:center;color:#00c864;">−4cm</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TREINOS -->
+  <div class="psec" id="pt-treinos">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;">Treinos de Delmir Marques</div>
+        <div style="font-size:12px;color:var(--txt);margin-top:2px;">Clique num treino para abrir · Professor edita séries, reps e carga</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="baz" onclick="gerarComIA()">⚡ Gerar com IA</button>
+        <button class="bsec" style="font-size:12px;" onclick="addTreino()">+ Novo treino</button>
+      </div>
+    </div>
+
+    <div class="treino-cards" id="treino-cards-lista">
+      <!-- Treino cards gerados via JS -->
+    </div>
+
+    <div id="treino-detalhe" style="display:none;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+        <button class="bsec" style="font-size:11px;padding:6px 10px;" onclick="fecharTreinoDetalhe()">← Voltar</button>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;" id="td-titulo">Treino A — Perna & Glúteo</div>
+        <div style="margin-left:auto;display:flex;gap:7px;">
+          <button class="baz" style="font-size:11px;padding:7px 12px;" onclick="notif('Treino salvo!')">💾 Salvar</button>
+          <button class="bsec" style="font-size:11px;padding:7px 12px;" onclick="notif('Imprimindo...')">🖨️ Imprimir</button>
+        </div>
+      </div>
+
+      <div class="sem-tabs" id="sem-tabs-wrap">
+        <!-- Semanas geradas via JS -->
+      </div>
+
+      <div class="card">
+        <div class="ch">
+          <div class="ct" id="td-subtit">Semana 1</div>
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+            <span style="font-size:11px;color:var(--txt);">Borg Alvo:</span>
+            <div style="display:flex;gap:4px;" id="borg-wrap">
+              <button class="bi-borg" onclick="selBorg(this)">6–7</button>
+              <button class="bi-borg on" onclick="selBorg(this)">7–8</button>
+              <button class="bi-borg" onclick="selBorg(this)">8–9</button>
+              <button class="bi-borg" onclick="selBorg(this)">9–10</button>
+            </div>
+          </div>
+        </div>
+        <div class="cb">
+          <div class="banco-wrap">
+            <div class="banco-titulo">🔍 Banco de exercícios INMOVE — Busca rápida</div>
+            <input class="banco-busca" placeholder="Digite o nome do exercício..." oninput="bancoBusca(this.value)" id="banco-inp">
+            <div class="banco-res" id="banco-res"></div>
+          </div>
+          <div class="ex-header">
+            <div class="xh">Exercício / Instrução</div>
+            <div class="xh">Séries</div>
+            <div class="xh">Reps</div>
+            <div class="xh">Carga</div>
+            <div class="xh">Borg</div>
+            <div></div>
+          </div>
+          <div class="ex-lista" id="ex-lista-atual"></div>
+          <button class="add-ex" onclick="addExercicio()">+ Adicionar exercício</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ia-treino-box" style="display:none;">
+      <div class="ia-box">
+        <div class="ia-tit"><div class="dot"><span></span><span></span><span></span></div>Analisando avaliação e gerando treinos personalizados...</div>
+        <div style="font-size:12px;color:var(--txt);">A IA está lendo os achados dos testes e montando os treinos baseados no objetivo e nas disfunções identificadas.</div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Contexto para a IA</div></div>
+        <div class="cb">
+          <div class="fg"><label class="flbl">Quantos treinos por semana?</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dias-semana">
+              <button class="op" onclick="sel(this)">2x</button><button class="op" onclick="sel(this)">3x</button><button class="op on" onclick="sel(this)">4x</button><button class="op" onclick="sel(this)">5x</button><button class="op" onclick="sel(this)">6x</button>
+            </div>
+          </div>
+          <div class="fg"><label class="flbl">Quantas semanas de progressão?</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;" id="semanas-prog">
+              <button class="op" onclick="sel(this)">3</button><button class="op" onclick="sel(this)">4</button><button class="op on" onclick="sel(this)">5</button><button class="op" onclick="sel(this)">6</button><button class="op" onclick="sel(this)">8</button>
+            </div>
+          </div>
+          <div class="fg"><label class="flbl">Observações adicionais para a IA</label>
+            <textarea class="ftxt" id="ia-contexto" placeholder="Ex: priorizar membros inferiores, evitar agachamento bilateral no início, foco em hipertrofia glúteo...">Aluno com hipertrofia como objetivo. Principais disfunções: QL esquerdo hiperativo, glúteo esquerdo fraco, escoliose funcional, quadril 3D limitado especialmente esquerdo. Tornozelo esquerdo com menos mobilidade. Solicitar RX coluna.</textarea>
+          </div>
+          <div class="acoes">
+            <button class="bsec" onclick="fecharIABox()">Cancelar</button>
+            <button class="bpri" onclick="executarIA()">⚡ Gerar Treinos com IA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PSE -->
+  <div class="psec" id="pt-pse">
+    <div class="g2">
+      <div class="card" style="margin-bottom:0;">
+        <div class="ch"><div class="ct">🎯 Registrar PSE</div></div>
+        <div class="cb">
+          <div class="fg"><label class="flbl">Data da sessão</label><input type="date" class="finp"></div>
+          <div class="fg"><label class="flbl">Treino realizado</label>
+            <select class="fsel" id="pse-treino-sel">
+              <option>Treino A — Perna & Glúteo</option>
+              <option>Treino B — Peito/Ombro/Tríceps</option>
+              <option>Treino C — Costas/Bíceps</option>
+            </select>
+          </div>
+          <div class="fg"><label class="flbl">Semana</label>
+            <select class="fsel"><option>Semana 1</option><option>Semana 2</option><option>Semana 3</option><option>Semana 4</option><option>Semana 5</option></select>
+          </div>
+          <div class="fg" style="margin-bottom:6px;"><label class="flbl">Percepção de Esforço — Borg 1–10</label></div>
+          <div class="pse-esc">
+            <button class="pb" onclick="sp(this,1)">1</button><button class="pb" onclick="sp(this,2)">2</button><button class="pb" onclick="sp(this,3)">3</button><button class="pb" onclick="sp(this,4)">4</button><button class="pb" onclick="sp(this,5)">5</button>
+            <button class="pb" onclick="sp(this,6)">6</button><button class="pb" onclick="sp(this,7)">7</button><button class="pb" onclick="sp(this,8)">8</button><button class="pb" onclick="sp(this,9)">9</button><button class="pb" onclick="sp(this,10)">10</button>
+          </div>
+          <div class="pse-ref" id="pse-ref"></div>
+          <div class="fg" style="margin-top:12px;"><label class="flbl">Observações da sessão</label><textarea class="ftxt" placeholder="Como foi? Aluno relatou algo? Carga progrediu?"></textarea></div>
+          <button class="bpri" style="width:100%;margin-top:2px;" onclick="notif('PSE registrado com sucesso!')">Registrar PSE</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="ch"><div class="ct">Histórico PSE</div></div>
+        <div class="cb">
+          <div class="phi"><div class="phi-num">8</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Treino A · Sem. 5</div><div style="font-size:11px;color:var(--txt);">15/05/2024 · Prof. Loren</div></div><span class="badge bam">Intenso</span></div>
+          <div class="phi"><div class="phi-num" style="color:var(--az);">7</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Treino C · Sem. 5</div><div style="font-size:11px;color:var(--txt);">13/05/2024 · Prof. Loren</div></div><span class="badge ba">Moderado</span></div>
+          <div class="phi"><div class="phi-num">8</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Treino B · Sem. 5</div><div style="font-size:11px;color:var(--txt);">12/05/2024 · Prof. Loren</div></div><span class="badge bam">Intenso</span></div>
+          <div class="phi"><div class="phi-num" style="color:var(--az);">7</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Treino A · Sem. 4</div><div style="font-size:11px;color:var(--txt);">09/05/2024 · Prof. Loren</div></div><span class="badge ba">Moderado</span></div>
+          <div class="phi"><div class="phi-num">9</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Treino B · Sem. 4</div><div style="font-size:11px;color:var(--txt);">07/05/2024 · Prof. Loren</div></div><span class="badge bl">Muito intenso</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOVA AVALIAÇÃO ══ -->
+<div class="pg" id="pg-nova-aval">
+  <div class="etapas">
+    <div class="etapa on" id="ep1" onclick="etapa(1)"><div class="en">01</div><div class="enm">Dados</div></div>
+    <div class="etapa" id="ep2" onclick="etapa(2)"><div class="en">02</div><div class="enm">Fotos</div></div>
+    <div class="etapa" id="ep3" onclick="etapa(3)"><div class="en">03</div><div class="enm">Testes</div></div>
+    <div class="etapa" id="ep4" onclick="etapa(4)"><div class="en">04</div><div class="enm">Treinos</div></div>
+  </div>
+  <div class="card esec on" id="sf1">
+    <div class="ch"><div class="ct">👤 Dados do Aluno</div></div>
+    <div class="cb">
+      <div class="g2">
+        <div class="fg"><label class="flbl">Nome Completo</label><input class="finp" id="novo-nome" placeholder="Nome do aluno"></div>
+        <div class="fg"><label class="flbl">Data de Nascimento</label><input type="date" class="finp"></div>
+        <div class="fg"><label class="flbl">Sexo</label><select class="fsel"><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
+        <div class="fg"><label class="flbl">Objetivo Principal</label><select class="fsel" id="novo-obj"><option>Hipertrofia</option><option>Emagrecimento</option><option>Qualidade de vida</option><option>Correção postural</option><option>Reabilitação</option><option>Performance</option></select></div>
+        <div class="fg"><label class="flbl">Dias de treino / semana</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dias-novo">
+            <button class="op" onclick="sel(this)">2x</button><button class="op on" onclick="sel(this)">3x</button><button class="op" onclick="sel(this)">4x</button><button class="op" onclick="sel(this)">5x</button>
+          </div>
+        </div>
+        <div class="fg"><label class="flbl">Semanas de progressão</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="op" onclick="sel(this)">3</button><button class="op on" onclick="sel(this)">4</button><button class="op" onclick="sel(this)">5</button><button class="op" onclick="sel(this)">6</button><button class="op" onclick="sel(this)">8</button>
+          </div>
+        </div>
+        <div class="fg gcol"><label class="flbl">Patologias / Restrições / Queixas de dor</label><textarea class="ftxt" placeholder="Ex: hérnia de disco, dor lombar, hipertensão, crepitação joelhos..."></textarea></div>
+      </div>
+      <div class="acoes"><button class="bpri" onclick="etapa(2)">Próximo: Fotos →</button></div>
+    </div>
+  </div>
+  <div class="card esec" id="sf2">
+    <div class="ch"><div class="ct">📷 Fotos Posturais</div></div>
+    <div class="cb">
+      <p style="font-size:12px;color:var(--txt);margin-bottom:14px;">3 vistas do aluno para análise postural e comparação futura.</p>
+      <div class="fp-grid">
+        <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">🧍</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">FRENTE</div></div></div>
+        <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">🧍</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--az)">LADO</div></div></div>
+        <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">🧍</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">COSTAS</div></div></div>
+      </div>
+      <div class="fg"><label class="flbl">Observações Posturais</label><textarea class="ftxt" id="obs-postural" placeholder="Achados posturais: pelve, coluna, ombros, membros inferiores..."></textarea></div>
+      <div class="acoes"><button class="bsec" onclick="etapa(1)">← Voltar</button><button class="bpri" onclick="etapa(3)">Próximo: Testes →</button></div>
+    </div>
+  </div>
+  <div class="card esec" id="sf3">
+    <div class="ch"><div class="ct">🔬 Testes Funcionais</div><span class="badge bl">Vídeo: frontal · posterior · lateral</span></div>
+    <div class="cb" id="testes-nova-aval"></div>
+  </div>
+  <div class="esec" id="sf4"><div id="nova-aval-treino"></div></div>
+</div>
+
+<!-- ══ PSE GLOBAL ══ -->
+<div class="pg" id="pg-pse">
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><div class="ct">🎯 Registrar PSE</div></div>
+      <div class="cb">
+        <div class="fg"><label class="flbl">Aluno</label><select class="fsel"><option>Delmir Marques</option><option>Larissa Marques</option><option>Samara Alves</option><option>Claudia Damian</option></select></div>
+        <div class="fg"><label class="flbl">Data</label><input type="date" class="finp"></div>
+        <div class="fg"><label class="flbl">Treino & Semana</label>
+          <div class="g2">
+            <select class="fsel"><option>Treino A</option><option>Treino B</option><option>Treino C</option></select>
+            <select class="fsel"><option>Semana 1</option><option>Semana 2</option><option>Semana 3</option><option>Semana 4</option><option>Semana 5</option></select>
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:6px;"><label class="flbl">Percepção de Esforço — Borg 1–10</label></div>
+        <div class="pse-esc">
+          <button class="pb" onclick="sp(this,1)">1</button><button class="pb" onclick="sp(this,2)">2</button><button class="pb" onclick="sp(this,3)">3</button><button class="pb" onclick="sp(this,4)">4</button><button class="pb" onclick="sp(this,5)">5</button>
+          <button class="pb" onclick="sp(this,6)">6</button><button class="pb" onclick="sp(this,7)">7</button><button class="pb" onclick="sp(this,8)">8</button><button class="pb" onclick="sp(this,9)">9</button><button class="pb" onclick="sp(this,10)">10</button>
+        </div>
+        <div class="pse-ref" id="pse-ref2"></div>
+        <div class="fg" style="margin-top:12px;"><label class="flbl">Observações</label><textarea class="ftxt" placeholder="Como foi a sessão?"></textarea></div>
+        <button class="bpri" style="width:100%;margin-top:2px;" onclick="notif('PSE registrado!')">Registrar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">Últimas Sessões</div></div>
+      <div class="cb">
+        <div class="phi"><div class="phi-num">8</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Delmir — Treino A · Sem. 5</div><div style="font-size:11px;color:var(--txt);">15/05 · Prof. Loren</div></div><span class="badge bam">Intenso</span></div>
+        <div class="phi"><div class="phi-num" style="color:var(--az);">6</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Larissa — Treino B · Sem. 4</div><div style="font-size:11px;color:var(--txt);">15/05 · Prof. Loren</div></div><span class="badge ba">Moderado</span></div>
+        <div class="phi"><div class="phi-num">7</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Samara — Treino A · Sem. 2</div><div style="font-size:11px;color:var(--txt);">14/05 · Prof. Loren</div></div><span class="badge ba">Moderado</span></div>
+        <div class="phi"><div class="phi-num">9</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Delmir — Treino C · Sem. 5</div><div style="font-size:11px;color:var(--txt);">13/05 · Prof. Loren</div></div><span class="badge bl">Muito intenso</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RELATÓRIO ══ -->
+<div class="pg" id="pg-relatorio">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+    <button class="bsec" onclick="voltarPerfil()">← Voltar</button>
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;">Relatório do Aluno</div>
+    <div style="margin-left:auto;display:flex;gap:8px;">
+      <button class="baz" onclick="notif('Link copiado! Envie pelo WhatsApp')">🔗 Copiar Link</button>
+      <button class="bpri" onclick="imprimirRelatorio()">📄 Baixar PDF</button>
+    </div>
+  </div>
+  <div class="rel-prev" id="rel-conteudo">
+    <div class="rel-header">
+      <div>
+        <div class="rel-logo"><span class="in">IN</span><span class="mv">MOVE</span></div>
+        <div style="font-size:11px;color:#888;margin-top:2px;text-transform:uppercase;letter-spacing:1px;">Relatório de Evolução</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px;color:#888;">Prof. Loren Will</div>
+        <div style="font-size:11px;color:#aaa;margin-top:2px;">Maio 2024</div>
+      </div>
+    </div>
+    <div class="rel-tit" id="rel-nome">Delmir Marques</div>
+    <div class="rel-sub" id="rel-sub">Objetivo: Hipertrofia + Correção Postural · Avaliação: 06/11/2023</div>
+
+    <div class="rel-sec">Evolução Corporal</div>
+    <div class="rel-grid">
+      <div class="rel-item"><div class="rel-item-lbl">Peso perdido</div><div class="rel-item-val">−3.2 kg</div></div>
+      <div class="rel-item"><div class="rel-item-lbl">Massa muscular ganha</div><div class="rel-item-val">+1.8 kg</div></div>
+      <div class="rel-item"><div class="rel-item-lbl">% Gordura</div><div class="rel-item-val">24.1% → 21.4%</div></div>
+      <div class="rel-item"><div class="rel-item-lbl">Cintura</div><div class="rel-item-val">92cm → 88cm</div></div>
+    </div>
+
+    <div class="rel-sec">Achados da Avaliação Funcional</div>
+    <div class="rel-achado">Quadrado lombar esquerdo hiperativo — compensações identificadas no agachamento e step down</div>
+    <div class="rel-achado">Glúteo esquerdo com pouca ativação — inclinação pélvica excessiva lado esquerdo no step down</div>
+    <div class="rel-achado">Escoliose funcional identificada no teste de Adams — RX de coluna total recomendado</div>
+    <div class="rel-achado">Mobilidade do quadril 3D limitada especialmente lado esquerdo — expressões de desconforto</div>
+    <div class="rel-achado">Tornozelo direito 2cm maior que esquerdo — possível sobrecarga no joelho direito anterior</div>
+    <div class="rel-achado">Rotação tóracolimbar: direito com compensação de quadril, pouca dissociação tórax/lombar</div>
+
+    <div class="rel-sec">Percepção de Esforço (Últimas Sessões)</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Treino A · Semana 5</span><span style="font-weight:700;color:#FF6B2B;">8/10 — Intenso</span></div><div class="rel-pse-bar"><div class="rel-pse-fill" style="width:80%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Treino B · Semana 5</span><span style="font-weight:700;color:#FF6B2B;">8/10 — Intenso</span></div><div class="rel-pse-bar"><div class="rel-pse-fill" style="width:80%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Treino C · Semana 5</span><span style="font-weight:700;color:#1E6FD9;">7/10 — Moderado</span></div><div class="rel-pse-bar"><div class="rel-pse-fill" style="width:70%"></div></div></div>
+    </div>
+
+    <div class="rel-sec">Observações do Professor</div>
+    <textarea style="width:100%;background:#f5f5f5;border:1px solid #ddd;border-radius:6px;padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#333;min-height:80px;resize:vertical;outline:none;" placeholder="Adicione observações personalizadas para o aluno...">Delmir vem apresentando evolução consistente nas últimas 5 semanas. A progressão de cargas está sendo respeitada e o controle motor melhorou visivelmente no agachamento. Recomendo solicitar o RX de coluna e continuar priorizando os exercícios corretivos no início de cada sessão.</textarea>
+
+    <div style="margin-top:20px;padding-top:14px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:11px;color:#aaa;">
+      <span>INMOVE — Sistema de Avaliação & Treino</span>
+      <span>Prof. Loren Will · Maio 2024</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+<div class="notif" id="notif"></div>
+
+<style>
+.bi-borg{padding:4px 10px;border:1px solid var(--borda);border-radius:20px;background:transparent;color:var(--txt);font-size:11px;cursor:pointer;transition:.15s;}
+.bi-borg:hover{border-color:var(--az);color:var(--az);}
+.bi-borg.on{background:var(--az);color:#fff;border-color:var(--az);}
+</style>
+
+<script>
+// ═══ NAV ═══
+function irPg(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sbi').forEach(i=>i.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  const back=document.getElementById('btn-back');
+  back.classList.toggle('vis',['perfil','relatorio'].includes(id));
+  fecharMenu();
+}
+function voltarAlunos(){irPg('alunos');}
+function voltarPerfil(){irPg('perfil');}
+function abrirAluno(ini,nome,obj,data){
+  document.getElementById('pfav').textContent=ini;
+  document.getElementById('pfnome').textContent=nome;
+  document.getElementById('pfsub').textContent='Avaliação: '+data+' · '+obj;
+  irPg('perfil');
+  ptab(document.querySelector('.ptab'),'pt-fotos');
+  document.querySelector('.ptab').classList.add('on');
+}
+function toggleMenu(){document.getElementById('sb').classList.toggle('on');document.getElementById('ov').classList.toggle('on');}
+function fecharMenu(){document.getElementById('sb').classList.remove('on');document.getElementById('ov').classList.remove('on');}
+
+// ═══ TABS PERFIL ═══
+function ptab(btn,secId){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.psec').forEach(s=>s.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(secId).classList.add('on');
+}
+
+// ═══ ETAPAS AVALIAÇÃO ═══
+function etapa(n){
+  for(let i=1;i<=4;i++){
+    document.getElementById('ep'+i).classList.remove('on','ok');
+    const s=document.getElementById('sf'+i);
+    if(s){s.style.display='none';s.classList.remove('on');}
+  }
+  document.getElementById('ep'+n).classList.add('on');
+  for(let i=1;i<n;i++) document.getElementById('ep'+i).classList.add('ok');
+  const s=document.getElementById('sf'+n);
+  if(s){s.style.display='block';s.classList.add('on');}
+  if(n===4) mostrarTelaIA();
+}
+
+// ═══ OPÇÕES ═══
+function sel(btn){btn.closest('[id],[class*="opcoes"],[id*="dias"],[id*="semanas"]').querySelectorAll('.op').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function selBorg(btn){document.querySelectorAll('.bi-borg').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+
+// ═══ FOTOS ═══
+function pfPost(inp){
+  if(!inp.files[0])return;
+  const r=new FileReader();
+  r.onload=e=>{const s=inp.closest('.fp-slot');const img=s.querySelector('img');img.src=e.target.result;img.style.display='block';s.querySelector('.fp-ico').style.display='none';s.querySelector('.fp-txt').style.display='none';};
+  r.readAsDataURL(inp.files[0]);
+}
+
+// ═══ VÍDEOS/FOTOS NOS TESTES ═══
+function vmedia(inp){
+  if(!inp.files[0])return;
+  const slot=inp.closest('.vslot');
+  const isVideo=inp.files[0].type.startsWith('video');
+  if(isVideo){
+    const v=slot.querySelector('video');v.src=URL.createObjectURL(inp.files[0]);v.style.display='block';
+  } else {
+    const r=new FileReader();r.onload=e=>{const img=slot.querySelector('img');img.src=e.target.result;img.style.display='block';};r.readAsDataURL(inp.files[0]);
+  }
+  slot.querySelector('.vi').style.display='none';slot.querySelector('.vt2').style.display='none';
+  const ok=slot.querySelector('.vok');ok.style.display='flex';
+}
+
+// ═══ PSE ═══
+const pseTxt=['','Repouso','Muito leve','Leve','Confortável','Moderado','Ligeiramente intenso','Intenso','Muito intenso','Extremamente intenso','Máximo'];
+function sp(btn,n){
+  btn.closest('.pse-esc').querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const ref=btn.closest('.card,.psec').querySelector('[id^="pse-ref"]');
+  if(ref) ref.textContent=n+' — '+pseTxt[n];
+}
+
+// ═══ BANCO DE EXERCÍCIOS (Do Drive INMOVE) ═══
+const banco=[
+  // Liberação
+  'Rolo — Quadrado Lombar','Rolo — Glúteo','Rolo — Panturrilha','Rolo — Trato Íliotibial','Rolo — Peitoral','Rolo — Dorsal','Rolo — Eretores','Rolo — Trapézio','Bola — Arco Plantar','Bola — Peitoral',
+  // Mobilidade
+  'Mobilidade de Tornozelo com Resistência','Mobilidade 90/90 Quadril','Rotação Tridimensional do Quadril','Dissociação Tórax/Lombar (Gato-Camelo)','Expansão Torácica com Rolo','CARs de Quadril','CARs de Ombro','Mobilidade Torácica com Bastão','Mobilidade de Ombro com Bastão','Volta ao Mundo Quadril',
+  // Corretivos
+  'Ativação de Glúteo Médio (Side Steps)','Ativação Glúteo Médio (Clamshell)','Elevação Pélvica Unilateral','Face Pull com Faixa','Escapular Y + T com Faixa','Serrátil (Wall Slide)','Dead Bug','Bird-Dog','Superman com Rotação','Pallof Press',
+  // Inferiores
+  'Agachamento Livre','Agachamento Búlgaro','Agachamento Goblet','Leg Press 45°','Hip Thrust com Barra','Hip Thrust Unilateral','Levantamento Terra','Terra Romeno','Terra Sumo','Stiff Unilateral com Halter','Afundo com Halter','Passada Lateral','Cadeira Extensora','Mesa Flexora','Cadeira Flexora','Cadeira Abdutora','Leg Curl Excêntrico','Box Jump','Front Squat',
+  // Superiores Empurra
+  'Supino Inclinado com Halter','Supino Reto com Barra','Supino Declinado','Crucifixo Inclinado','Peck Deck','Desenvolvimento com Halter','Desenvolvimento Unilateral','Elevação Lateral','Elevação Frontal','Tríceps Testa','Tríceps Corda','Tríceps Pulley','Tríceps Banco','Flexão de Braços',
+  // Superiores Puxa
+  'Barra Fixa Pronada','Barra Fixa Supinada','Remada Curvada com Barra','Remada Curvada Supinada','Remada Unilateral com Halter','Remada Fechada Máquina','Puxador Frente Supinado','Puxador Frente Pronado','Rosca Direta com Barra','Rosca Scott','Rosca Bíceps com Halter','Rosca Martelo','Rosca Bco Inclinado',
+  // Core
+  'Prancha Frontal','Prancha Lateral','Prancha com Variação','Abdominal Bola','Dead Bug com Faixa','Roll Out','L-Sit Up','Abdominal Barra Fixa','Escalador',
+  // Metabólico/Funcional
+  'Wall Ball','Burpee','Kettlebell Swing','Slam Ball','Inchworm Walk','Farmer Carry','Turkish Get Up','Skipping','Box Jump','Corda Naval',
+  // Condicionamento
+  'Esteira Inclinada','Bike Ergométrica','Remo Ergométrico','Corrida','Elíptico',
+];
+
+function bancoBusca(q){
+  const res=document.getElementById('banco-res');
+  if(!q||q.length<2){res.innerHTML='';return;}
+  const found=banco.filter(e=>e.toLowerCase().includes(q.toLowerCase())).slice(0,12);
+  res.innerHTML=found.map(e=>`<button class="bi" onclick="addDoBanco('${e.replace(/'/g,"\\'")}',this)">${e}</button>`).join('');
+}
+
+function addDoBanco(nome,btn){
+  addExercicio(nome);
+  document.getElementById('banco-inp').value='';
+  document.getElementById('banco-res').innerHTML='';
+  notif('Exercício adicionado!');
+}
+
+// ═══ EXERCÍCIOS EDITÁVEIS ═══
+function mkEx(nome='',obs='',ser='3',rep='10',carga='',borg='7'){
+  const d=document.createElement('div');
+  d.className='xi';
+  d.innerHTML=`
+    <div><input class="xnome" value="${nome}" placeholder="Nome do exercício"><input class="xobs" value="${obs}" placeholder="Instrução técnica..."></div>
+    <div class="xcol"><input class="xnum" value="${ser}"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Séries</div></div>
+    <div class="xcol"><input class="xnum" value="${rep}"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Reps</div></div>
+    <div class="xcol"><input class="xnum" value="${carga}"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Carga</div></div>
+    <div class="xcol"><input class="xnum az" value="${borg}"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Borg</div></div>
+    <button class="xdel" onclick="this.closest('.xi').remove()">×</button>`;
+  return d;
+}
+
+function addExercicio(nome=''){
+  const lista=document.getElementById('ex-lista-atual');
+  const ex=mkEx(nome);
+  lista.appendChild(ex);
+  ex.querySelector('.xnome').focus();
+}
+
+// ═══ TREINOS ═══
+const treinosDelmir=[
+  {id:0,nome:'Treino A',sub:'Perna & Glúteo',borg:'7–8',sems:5,info:'16 exercícios · Liberação + Corretivos + Principal',
+   exercicios:[
+    {f:'lib',n:'Rolo — Quadrado Lombar',o:'⭐ PRIORIDADE ESQUERDO · 90s',s:'1',r:'90s',c:'—',b:'—'},
+    {f:'lib',n:'Rolo — Glúteo',o:'⭐ PRIORIDADE DIREITO · 60s',s:'1',r:'60s',c:'—',b:'—'},
+    {f:'lib',n:'Rolo — Trato Íliotibial + Panturrilha',o:'Prioridade DIREITO',s:'1',r:'60s',c:'—',b:'—'},
+    {f:'lib',n:'Bola — Arco Plantar',o:'Bilateral · 30 rolamentos cada',s:'1',r:'60s',c:'—',b:'—'},
+    {f:'mob',n:'Mobilidade de Tornozelo com Resistência',o:'⭐ PRIORIDADE ESQUERDO · faixa elástica',s:'3',r:'12',c:'Faixa',b:'6'},
+    {f:'mob',n:'Rotação Tridimensional do Quadril (90/90)',o:'⭐ PRIORIDADE ESQUERDO · aumentar amplitude',s:'3',r:'8',c:'—',b:'6'},
+    {f:'mob',n:'Dissociação Tórax/Lombar (Gato-Camelo)',o:'Devagar · segmentação tórax/lombar',s:'3',r:'10',c:'—',b:'6'},
+    {f:'corr',n:'Ativação de Glúteo Médio (Side Steps)',o:'⭐ PRIORIDADE ESQUERDO · mini band',s:'3',r:'15',c:'Mini band',b:'6'},
+    {f:'corr',n:'Elevação Pélvica Unilateral',o:'⭐ PRIORIDADE ESQUERDO · corrigir desequilíbrio',s:'3',r:'12',c:'—',b:'6'},
+    {f:'pri',n:'Agachamento Búlgaro',o:'Controle valgo joelho · eccêntrico 3s',s:'4',r:'10',c:'20kg',b:'8'},
+    {f:'pri',n:'Hip Thrust com Barra',o:'⭐ Ativação glúteo bilateral · carga alta',s:'4',r:'12',c:'80kg',b:'8'},
+    {f:'pri',n:'Leg Press 45°',o:'Posição alta dos pés · joelho dir. atenção',s:'3',r:'12',c:'120kg',b:'7'},
+    {f:'pri',n:'Terra Romeno Unilateral',o:'Controle eccêntrico · não hiperlordosar',s:'3',r:'10',c:'22kg',b:'7'},
+    {f:'core',n:'Prancha Lateral',o:'⭐ PRIORIDADE ESQUERDO · desequilíbrio identificado',s:'3',r:'35s',c:'—',b:'6'},
+    {f:'core',n:'Bird-Dog',o:'Sem rotação de pelve · QL esq. controlado',s:'3',r:'10',c:'—',b:'6'},
+   ]},
+  {id:1,nome:'Treino B',sub:'Peito, Ombro & Tríceps',borg:'7–8',sems:5,info:'13 exercícios · Foco trapézio inferior e tronco esq.',
+   exercicios:[
+    {f:'lib',n:'Rolo — Peitoral',o:'Bilateral · pressão moderada',s:'1',r:'60s',c:'—',b:'—'},
+    {f:'lib',n:'Rolo — Dorsal + Trapézio',o:'⭐ PRIORIDADE ESQUERDO',s:'1',r:'60s',c:'—',b:'—'},
+    {f:'mob',n:'Expansão Torácica com Rolo',o:'Deitado · braços abertos · mobilidade tórax',s:'3',r:'10',c:'—',b:'6'},
+    {f:'mob',n:'CARs de Ombro',o:'Circundução completa e controlada · bilateral',s:'2',r:'8',c:'—',b:'6'},
+    {f:'corr',n:'Escapular Y + T com Faixa',o:'⭐ Ativar trapézio FIBRAS INFERIORES',s:'3',r:'12',c:'Faixa leve',b:'6'},
+    {f:'corr',n:'Serrátil (Wall Slide)',o:'Controle escapular · atenção tronco esquerdo',s:'3',r:'10',c:'—',b:'6'},
+    {f:'pri',n:'Supino Inclinado com Halter',o:'Eccêntrico 3s · não elevar trapézio',s:'4',r:'8',c:'26kg',b:'8'},
+    {f:'pri',n:'Crucifixo Inclinado',o:'Amplitude completa · cotovelo leve flexão',s:'3',r:'12',c:'14kg',b:'7'},
+    {f:'pri',n:'Desenvolvimento Unilateral',o:'⭐ Esquerdo PRIMEIRO · evitar elevação trapézio',s:'3',r:'10',c:'16kg',b:'7'},
+    {f:'pri',n:'Elevação Lateral',o:'Cotovelo ligeiramente flexionado',s:'3',r:'12',c:'8kg',b:'7'},
+    {f:'pri',n:'Tríceps Testa com Barra',o:'Cotovelos apontados para frente',s:'3',r:'10',c:'30kg',b:'7'},
+    {f:'core',n:'Prancha Frontal com Variação',o:'Progressão para instabilidade',s:'3',r:'40s',c:'—',b:'6'},
+   ]},
+  {id:2,nome:'Treino C',sub:'Costas, Bíceps & Core',borg:'7–8',sems:5,info:'12 exercícios · Controle motor e força puxada',
+   exercicios:[
+    {f:'lib',n:'Rolo — Trapézio + Eretores',o:'⭐ PRIORIDADE ESQUERDO · ponto-gatilho',s:'1',r:'60s',c:'—',b:'—'},
+    {f:'lib',n:'Rolo — Trato Íliotibial + Panturrilha',o:'⭐ PRIORIDADE DIREITO',s:'1',r:'60s',c:'—',b:'—'},
+    {f:'mob',n:'Quadril 3D Progressivo',o:'⭐ PRIORIDADE ESQUERDO · ampliar amplitude',s:'3',r:'10',c:'—',b:'6'},
+    {f:'mob',n:'Expansão Torácica com Rotação',o:'Dissociação tórax/lombar · prioridade rot. esq.',s:'3',r:'8',c:'Bastão',b:'6'},
+    {f:'corr',n:'Face Pull com Faixa',o:'⭐ Ativar trapézio inf. e rotadores externos',s:'3',r:'15',c:'Faixa',b:'6'},
+    {f:'corr',n:'Superman com Rotação',o:'Controle motor lombar · sem hiperextensão',s:'3',r:'10',c:'—',b:'6'},
+    {f:'pri',n:'Levantamento Terra Romeno',o:'Não hiperlordosar · eccêntrico lento',s:'4',r:'8',c:'60kg',b:'8'},
+    {f:'pri',n:'Barra Fixa Pronada',o:'Retração escapular completa · trapézio inf.',s:'4',r:'8',c:'BW',b:'8'},
+    {f:'pri',n:'Remada Curvada Supinada',o:'Cotovelos junto ao corpo · retração máxima',s:'4',r:'10',c:'50kg',b:'7'},
+    {f:'pri',n:'Remada Unilateral com Halter',o:'⭐ PRIORIDADE ESQUERDO · estabilizar pelve',s:'3',r:'10',c:'28kg',b:'7'},
+    {f:'pri',n:'Rosca Direta com Barra',o:'Sem balanço de tronco · supinação completa',s:'3',r:'10',c:'30kg',b:'7'},
+    {f:'core',n:'Dead Bug',o:'Lombar pressionada no chão · QL esq. controlado',s:'3',r:'8',c:'—',b:'6'},
+   ]},
+];
+
+let treinoAbertoId=null;
+let nSemanas=5;
+
+function renderTreinoCards(){
+  const cont=document.getElementById('treino-cards-lista');
+  cont.innerHTML=treinosDelmir.map(t=>`
+    <div class="tc" onclick="abrirTreino(${t.id})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <div class="tc-nome">${t.nome}</div>
+        <span class="badge ba" style="flex-shrink:0;">Borg ${t.borg}</span>
+      </div>
+      <div style="font-size:12px;color:var(--lar);font-weight:600;margin-bottom:3px;">${t.sub}</div>
+      <div class="tc-info">${t.info}<br>📅 ${t.sems} semanas ativas</div>
+    </div>
+  `).join('')+`<div class="tc tc-add" onclick="addTreino()"><div style="font-size:20px;color:var(--txt);">+</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;">Novo Treino</div></div>`;
+}
+
+function abrirTreino(id){
+  treinoAbertoId=id;
+  const t=treinosDelmir[id];
+  document.getElementById('td-titulo').textContent=`${t.nome} — ${t.sub}`;
+  document.getElementById('treino-cards-lista').style.display='none';
+  document.getElementById('treino-detalhe').style.display='block';
+  document.getElementById('ia-treino-box').style.display='none';
+  renderSemanas(t.sems);
+  carregarExercicios(t);
+}
+
+function fecharTreinoDetalhe(){
+  document.getElementById('treino-detalhe').style.display='none';
+  document.getElementById('treino-cards-lista').style.display='grid';
+  treinoAbertoId=null;
+}
+
+function renderSemanas(n){
+  const wrap=document.getElementById('sem-tabs-wrap');
+  wrap.innerHTML='';
+  for(let i=1;i<=n;i++){
+    const b=document.createElement('button');
+    b.className='stab'+(i===1?' on':'');
+    b.textContent='Semana '+i;
+    b.onclick=function(){document.querySelectorAll('.stab').forEach(s=>s.classList.remove('on'));this.classList.add('on');document.getElementById('td-subtit').textContent=this.textContent;};
+    wrap.appendChild(b);
+  }
+  const add=document.createElement('button');
+  add.className='add-sem';add.textContent='+ Semana';
+  add.onclick=()=>{n++;renderSemanas(n);};
+  wrap.appendChild(add);
+}
+
+const faseLabel={lib:'🟤 Autoliberação',mob:'🔵 Mobilidade & Ativação',corr:'🟠 Exercícios Corretivos',pri:'🟢 Treino Principal',core:'🔵 Core & Controle Motor'};
+
+function carregarExercicios(t){
+  const lista=document.getElementById('ex-lista-atual');
+  lista.innerHTML='';
+  let faseAtual=null;
+  t.exercicios.forEach(e=>{
+    if(e.f!==faseAtual){
+      faseAtual=e.f;
+      const div=document.createElement('div');
+      div.className='fase-div';
+      div.textContent=faseLabel[e.f]||e.f;
+      lista.appendChild(div);
+    }
+    const xi=mkEx(e.n,e.o,e.s,e.r,e.c,e.b);
+    if(e.f==='corr') xi.classList.add('corr');
+    if(e.f==='lib') xi.classList.add('lib');
+    lista.appendChild(xi);
+  });
+}
+
+function addTreino(){
+  const letra=String.fromCharCode(65+treinosDelmir.length);
+  treinosDelmir.push({id:treinosDelmir.length,nome:'Treino '+letra,sub:'Novo treino',borg:'7–8',sems:4,info:'0 exercícios · Treino em branco',exercicios:[]});
+  renderTreinoCards();
+  abrirTreino(treinosDelmir.length-1);
+  notif('Treino '+letra+' criado!');
+}
+
+// ═══ IA ═══
+function gerarComIA(){
+  document.getElementById('treino-cards-lista').style.display='none';
+  document.getElementById('treino-detalhe').style.display='none';
+  document.getElementById('ia-treino-box').style.display='block';
+}
+function fecharIABox(){
+  document.getElementById('ia-treino-box').style.display='none';
+  document.getElementById('treino-cards-lista').style.display='grid';
+}
+async function executarIA(){
+  const ctx=document.getElementById('ia-contexto').value;
+  const diasEl=document.querySelector('#dias-semana .op.on');
+  const semsEl=document.querySelector('#semanas-prog .op.on');
+  const dias=diasEl?diasEl.textContent:'3x';
+  const sems=semsEl?parseInt(semsEl.textContent):4;
+
+  document.getElementById('ia-treino-box').innerHTML=`
+    <div class="ia-box">
+      <div class="ia-tit"><div class="dot"><span></span><span></span><span></span></div>Gerando treinos personalizados com IA...</div>
+      <div style="font-size:12px;color:var(--txt);">Analisando avaliação + contexto do professor. Aguarde alguns segundos.</div>
+    </div>`;
+
+  const prompt=`Você é especialista em treinamento funcional e hipertrofia da academia INMOVE, Brasil. 
+  
+Contexto: ${ctx}
+Frequência: ${dias} por semana | Progressão: ${sems} semanas
+
+Monte ${parseInt(dias)}treinos (A, B, C...) com fases: liberação, mobilidade, corretivo, principal, core.
+Use nomenclatura 100% brasileira. Borg alvo 7-8 principal, 6-7 corretivos.
+
+Responda APENAS em JSON:
+{"treinos":[{"nome":"Treino A","sub":"descrição curta","exercicios":[{"f":"lib|mob|corr|pri|core","n":"nome","o":"instrução objetiva","s":"séries","r":"reps","c":"carga ou —","b":"borg"}]}]}`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
+    const data=await resp.json();
+    const txt=data.content.filter(c=>c.type==='text').map(c=>c.text).join('').replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(txt);
+    parsed.treinos.forEach((t,i)=>{
+      treinosDelmir.push({id:treinosDelmir.length,nome:t.nome,sub:t.sub,borg:'7–8',sems,info:`${t.exercicios.length} exercícios · IA personalizada`,exercicios:t.exercicios});
+    });
+    renderTreinoCards();
+    document.getElementById('ia-treino-box').style.display='none';
+    document.getElementById('treino-cards-lista').style.display='grid';
+    notif('Treinos gerados com sucesso!');
+  }catch(e){
+    document.getElementById('ia-treino-box').innerHTML=`
+      <div class="ia-box" style="border-color:rgba(255,80,80,.3);">
+        <div style="font-size:13px;color:#ff5050;margin-bottom:8px;">⚠️ Erro ao conectar com a IA</div>
+        <div style="font-size:12px;color:var(--txt);">Verifique a conexão e tente novamente, ou monte o treino manualmente.</div>
+        <button class="bsec" style="margin-top:10px;font-size:11px;" onclick="fecharIABox()">Montar manualmente</button>
+      </div>`;
+  }
+}
+
+// ═══ RELATÓRIO ═══
+function abrirRelatorio(){irPg('relatorio');}
+function imprimirRelatorio(){
+  const conteudo=document.getElementById('rel-conteudo').innerHTML;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório INMOVE</title><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><style>body{font-family:"DM Sans",sans-serif;padding:24px;max-width:700px;margin:0 auto;font-size:13px;}.rel-header{display:flex;justify-content:space-between;border-bottom:2px solid #FF6B2B;padding-bottom:14px;margin-bottom:18px;}.rel-logo{font-family:"Syne",sans-serif;font-weight:800;font-size:22px;}.in{color:#FF6B2B;}.mv{color:#1E6FD9;}.rel-tit{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;margin-bottom:3px;}.rel-sub{font-size:12px;color:#666;}.rel-sec{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#FF6B2B;margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid #eee;}.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}.rel-item{background:#f9f9f9;border-radius:7px;padding:10px 12px;}.rel-item-lbl{font-size:10px;text-transform:uppercase;color:#888;margin-bottom:3px;}.rel-item-val{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;color:#FF6B2B;}.rel-achado{display:flex;gap:7px;font-size:12px;margin-bottom:5px;}.rel-achado::before{content:"→";color:#1E6FD9;flex-shrink:0;}.rel-pse-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden;margin-top:4px;}.rel-pse-fill{height:100%;background:linear-gradient(90deg,#FF6B2B,#1E6FD9);border-radius:4px;}textarea{width:100%;border:1px solid #ddd;border-radius:6px;padding:10px;font-size:13px;color:#333;min-height:80px;}</style></head><body>${conteudo}</body></html>`);
+  w.document.close();w.print();
+  notif('PDF gerado!');
+}
+
+// ═══ TESTES ═══
+const testesConfig=[
+  {nome:'Agachamento',opcoes:[['Controle Motor',['Bom','Regular','Ruim']],['QL / Pelve',['Normal','QL Esq. Hiperativo','QL Dir.']],['Arco Plantar',['Normal','Pronação Esq.','Pronação Dir.','Bilateral']],['Dor?',['Não','Lombar','Joelho']]]},
+  {nome:'Agachamento — Braços Acima da Cabeça',opcoes:[['Resultado',['Normal','Tronco Esq. Fraco','Compensação Lombar','Não Consegue']]]},
+  {nome:'Step Down — Joelho / Quadril',opcoes:[['Lado Esquerdo',['Estável','Valgo dinâmico','Drop pélvico']],['Lado Direito',['Estável','Valgo dinâmico','Drop pélvico']],['Dor?',['Não','Joelho Esq.','Joelho Dir.','Quadril']]]},
+  {nome:'Mobilidade de Tornozelo',numeros:[['Tornozelo Direito (cm)','12'],['Tornozelo Esquerdo (cm)','10']]},
+  {nome:'Rotação Tóracolimbar',opcoes:[['Rotação Direita',['Boa dissociação','Compensação quadril','Amplitude reduzida']],['Rotação Esquerda',['Boa dissociação','Compensação quadril','Amplitude reduzida']]]},
+  {nome:'Rotação Tridimensional do Quadril',opcoes:[['Lado Esquerdo',['Boa amplitude','Limitação leve','Limitação grave','Dor']],['Lado Direito',['Boa amplitude','Limitação leve','Limitação grave','Dor']]]},
+  {nome:'Prancha Frontal & Lateral',opcoes:[['Prancha Frontal',['Manteve','Com dor','Não manteve']],['Prancha Lateral',['Manteve','Desequilíbrio','Com dor']]]},
+  {nome:'Teste de Adams — Coluna',opcoes:[['Resultado',['Normal','Escoliose funcional','Escoliose estrutural','Solicitar RX']]]},
+  {nome:'Laségue — Pernas Estendidas',opcoes:[['Esquerdo',['Sem desconforto','Amplitude reduzida','Dor irradiada']],['Direito',['Sem desconforto','Amplitude reduzida','Dor irradiada']]]},
+];
+
+function renderTestes(containerId){
+  const cont=document.getElementById(containerId);
+  if(!cont) return;
+  cont.innerHTML=testesConfig.map((t,i)=>{
+    let opcoesHTML='';
+    if(t.opcoes) opcoesHTML=`<div class="lado2">`+t.opcoes.map(([lbl,ops])=>`<div><div class="llbl">${lbl}</div><div class="opcoes">${ops.map(o=>`<button class="op" onclick="sel(this)">${o}</button>`).join('')}</div></div>`).join('')+`</div>`;
+    if(t.numeros) opcoesHTML=`<div class="lado2">`+t.numeros.map(([lbl,val])=>`<div><div class="llbl">${lbl}</div><input type="number" class="finp" value="${val}"></div>`).join('')+`</div>`;
+    return `<div class="tb2">
+      <div class="tnome">${t.nome}</div>
+      ${opcoesHTML}
+      <div class="vt-wrap">
+        <div class="vt-lbl">🎬 Vídeos do teste (3–5 seg) · Foto ou vídeo</div>
+        <div class="vt-grid">
+          <div class="vslot" onclick="this.querySelector('input').click()"><div class="vi">📹</div><div class="vt2">Frontal</div><input type="file" accept="video/*,image/*" onchange="vmedia(this)"><video controls></video><img><div class="vok">✓</div></div>
+          <div class="vslot" onclick="this.querySelector('input').click()"><div class="vi">📹</div><div class="vt2">Posterior</div><input type="file" accept="video/*,image/*" onchange="vmedia(this)"><video controls></video><img><div class="vok">✓</div></div>
+          <div class="vslot" onclick="this.querySelector('input').click()"><div class="vi">📹</div><div class="vt2">Lateral</div><input type="file" accept="video/*,image/*" onchange="vmedia(this)"><video controls></video><img><div class="vok">✓</div></div>
+        </div>
+      </div>
+      <div class="fg" style="margin-top:8px;margin-bottom:0;"><label class="flbl">Observações</label><input class="finp" placeholder="Achados do teste..."></div>
+    </div>`;
+  }).join('')+`<div class="fg" style="margin-top:4px;"><label class="flbl">Resumo Geral dos Testes</label><textarea class="ftxt" placeholder="Principais achados e prioridades para a prescrição..."></textarea></div><div class="acoes"><button class="bsec" onclick="etapa(2)">← Voltar</button><button class="bpri" onclick="etapa(4)">Próximo: Gerar Treinos com IA →</button></div>`;
+}
+
+function mostrarTelaIA(){
+  document.getElementById('nova-aval-treino').innerHTML=`
+    <div class="ia-box">
+      <div class="ia-tit">⚡ Próximo passo: Gerar treinos com IA</div>
+      <p style="font-size:12px;color:var(--txt);margin-bottom:12px;">A IA vai usar os dados da avaliação + seus inputs para montar todos os treinos já organizados com progressão semanal.</p>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">Contexto para a IA</div></div>
+      <div class="cb">
+        <div class="fg"><label class="flbl">Dias de treino / semana</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dias-semana2">
+            <button class="op" onclick="sel(this)">2x</button><button class="op" onclick="sel(this)">3x</button><button class="op on" onclick="sel(this)">4x</button><button class="op" onclick="sel(this)">5x</button>
+          </div>
+        </div>
+        <div class="fg"><label class="flbl">Semanas de progressão</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="semanas-prog2">
+            <button class="op" onclick="sel(this)">3</button><button class="op on" onclick="sel(this)">4</button><button class="op" onclick="sel(this)">5</button><button class="op" onclick="sel(this)">6</button>
+          </div>
+        </div>
+        <div class="fg"><label class="flbl">Observações adicionais</label>
+          <textarea class="ftxt" id="ia-ctx2" placeholder="Ex: priorizar glúteo, evitar agachamento bilateral, foco em emagrecimento..."></textarea>
+        </div>
+        <div class="acoes">
+          <button class="bsec" onclick="etapa(3)">← Voltar</button>
+          <button class="bpri" onclick="salvarAlunoEFechar()">⚡ Gerar Treinos e Salvar Aluno</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function executarIANova(){
+  const nome=document.getElementById('novo-nome').value||'Novo Aluno';
+  const ctx=document.getElementById('ia-ctx2')?.value||'';
+  notif('Aluno salvo! Treinos sendo gerados...');
+  setTimeout(()=>{irPg('alunos');},1500);
+}
+
+// ═══ NOTIF ═══
+async function salvarAlunoEFechar(){
+  if(window.fbSalvarNovoAluno){
+    const ok = await window.fbSalvarNovoAluno();
+    if(ok){ notif('Aluno salvo!'); setTimeout(()=>irPg('alunos'),1200); }
+    else { notif('Erro ao salvar!'); }
+  }
+}
+
+function notif(msg){const n=document.getElementById('notif');n.textContent='✓ '+msg;n.classList.add('on');setTimeout(()=>n.classList.remove('on'),2600);}
+
+
+// ═══ SALVAMENTO LOCAL (dados ficam no dispositivo) ═══
+function salvarDados(){
+  try{
+    const dados={
+      alunos: window._alunos||[],
+      treinos: treinosDelmir,
+      pse: window._pse||[],
+      ultimoSalvo: new Date().toLocaleString('pt-BR')
+    };
+    localStorage.setItem('inmove_dados', JSON.stringify(dados));
+    notif('Dados salvos no dispositivo!');
+  }catch(e){notif('Erro ao salvar!');}
+}
+
+function carregarDados(){
+  try{
+    const raw=localStorage.getItem('inmove_dados');
+    if(!raw) return;
+    const dados=JSON.parse(raw);
+    if(dados.treinos && dados.treinos.length>0){
+      dados.treinos.forEach(t=>{
+        if(!treinosDelmir.find(x=>x.id===t.id)) treinosDelmir.push(t);
+        else Object.assign(treinosDelmir.find(x=>x.id===t.id),t);
+      });
+      renderTreinoCards();
+    }
+    console.log('Dados carregados · último salvo:', dados.ultimoSalvo);
+  }catch(e){console.log('Nenhum dado salvo ainda');}
+}
+
+// Auto-salvar a cada 60 segundos
+setInterval(salvarDados, 60000);
+
+// Salvar ao sair da página
+window.addEventListener('beforeunload', salvarDados);
+
+// Carregar ao abrir
+window.addEventListener('load', ()=>{ setTimeout(carregarDados, 500); });
+
+// ═══ INIT ═══
+renderTreinoCards();
+renderTestes('testes-container');
+renderTestes('testes-nova-aval');
+</script>
+</body>
+</html>
