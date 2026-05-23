@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INMOVE</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--lar:#FF6B2B;--az:#1E6FD9;--bg:#0a0a0a;--c1:#141414;--c2:#1c1c1c;--c3:#252525;--txt:#888;--borda:#262626;--br:#f4f1ec;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--br);font-family:"DM Sans",sans-serif;font-size:14px;}
+.topbar{position:fixed;top:0;left:0;right:0;height:52px;background:var(--c1);border-bottom:1px solid var(--borda);display:flex;align-items:center;padding:0 14px;gap:10px;z-index:300;}
+.mbtn{width:34px;height:34px;border:1px solid var(--borda);border-radius:7px;background:transparent;color:var(--br);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo{font-family:"Syne",sans-serif;font-weight:800;font-size:20px;letter-spacing:-1px;}
+.in{color:var(--lar);}.mv{color:var(--az);}
+.lsep{width:1px;height:18px;background:var(--borda);margin:0 6px;}
+.lsub{font-size:10px;color:var(--txt);text-transform:uppercase;letter-spacing:1.5px;}
+.tr{margin-left:auto;}
+.bcta{background:var(--lar);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;cursor:pointer;}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:199;opacity:0;pointer-events:none;transition:.2s;}
+.ov.on{opacity:1;pointer-events:all;}
+.sb{position:fixed;top:52px;left:0;bottom:0;width:220px;background:var(--c1);border-right:1px solid var(--borda);z-index:200;transform:translateX(-100%);transition:.25s;overflow-y:auto;}
+.sb.on{transform:none;}
+.sb-sec{padding:14px 16px 4px;font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#444;}
+.sbi{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;color:var(--txt);font-size:13px;border-left:3px solid transparent;transition:.15s;}
+.sbi:hover{background:var(--c2);color:var(--br);}
+.sbi.on{color:var(--lar);border-left-color:var(--lar);background:rgba(255,107,43,.06);}
+.main{margin-top:52px;padding:20px 16px;}
+.pg{display:none;animation:fd .2s ease;}.pg.on{display:block;}
+@keyframes fd{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.card{background:var(--c1);border:1px solid var(--borda);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.ch{padding:12px 15px;border-bottom:1px solid var(--borda);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.ct{font-family:"Syne",sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;}
+.cb{padding:15px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.gcol{grid-column:1/-1;}
+.flbl{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);margin-bottom:5px;}
+.finp,.fsel,.ftxt{width:100%;background:var(--c2);border:1px solid var(--borda);border-radius:6px;padding:9px 11px;color:var(--br);font-family:"DM Sans",sans-serif;font-size:13px;outline:none;transition:.15s;}
+.finp:focus,.fsel:focus,.ftxt:focus{border-color:var(--lar);}
+.fsel option{background:var(--c2);}
+.ftxt{min-height:65px;resize:vertical;}
+.fg{margin-bottom:12px;}
+.ftit{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--lar);margin:14px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--borda);}
+.badge{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:500;text-transform:uppercase;}
+.bv{background:rgba(0,200,100,.15);color:#00c864;}
+.bam{background:rgba(255,200,0,.15);color:#ffc800;}
+.bcz{background:var(--c3);color:var(--txt);}
+.bl{background:rgba(255,107,43,.15);color:var(--lar);}
+.ba{background:rgba(30,111,217,.15);color:var(--az);}
+.bpri{background:var(--lar);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;cursor:pointer;}
+.baz{background:var(--az);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;cursor:pointer;}
+.bsec{background:transparent;color:var(--br);border:1px solid var(--borda);padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer;}
+.acoes{display:flex;gap:9px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap;}
+/* ALUNOS */
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.alc{background:var(--c1);border:1px solid var(--borda);border-radius:10px;padding:16px;cursor:pointer;transition:.2s;}
+.alc:hover{border-color:var(--lar);transform:translateY(-2px);}
+.alc-av{width:44px;height:44px;background:var(--c3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-weight:800;font-size:15px;color:var(--lar);margin-bottom:10px;}
+.alc-nome{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;}
+.alc-info{font-size:12px;color:var(--txt);line-height:1.7;}
+.alc-ft{margin-top:10px;padding-top:9px;border-top:1px solid var(--borda);display:flex;justify-content:space-between;align-items:center;}
+.tag{font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(255,107,43,.1);color:var(--lar);text-transform:uppercase;}
+.alc-add{border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;min-height:130px;}
+/* PERFIL */
+.ptabs{display:flex;gap:0;border:1px solid var(--borda);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.ptab{flex:1;padding:11px 6px;text-align:center;cursor:pointer;color:var(--txt);font-size:11px;font-family:"Syne",sans-serif;font-weight:700;text-transform:uppercase;border-right:1px solid var(--borda);background:var(--c1);transition:.15s;}
+.ptab:last-child{border-right:none;}
+.ptab.on{background:rgba(255,107,43,.07);color:var(--lar);border-bottom:3px solid var(--lar);}
+.psec{display:none;}.psec.on{display:block;}
+/* FOTOS */
+.fp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+.fp-card{background:var(--c2);border:1px solid var(--borda);border-radius:8px;overflow:hidden;}
+.fp-slot{aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:5px;position:relative;overflow:hidden;}
+.fp-slot input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.fp-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none;}
+.fp-ico{font-size:24px;color:var(--txt);}
+.fp-txt{font-size:9px;color:var(--txt);}
+.fp-info{padding:8px;border-top:1px solid var(--borda);text-align:center;}
+.fp-nome{font-family:"Syne",sans-serif;font-weight:800;font-size:12px;}
+/* TESTES */
+.tb2{background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:13px;margin-bottom:10px;}
+.tnome{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.tnome::before{content:"";width:5px;height:5px;background:var(--lar);border-radius:50%;flex-shrink:0;}
+.opcoes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.op{padding:5px 11px;border:1px solid var(--borda);border-radius:20px;background:transparent;color:var(--txt);font-size:11px;cursor:pointer;transition:.15s;}
+.op:hover{border-color:var(--lar);color:var(--br);}
+.op.on{background:var(--lar);color:#fff;border-color:var(--lar);font-weight:600;}
+.lado2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+.llbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);margin-bottom:4px;}
+.vt-wrap{margin-top:10px;padding-top:10px;border-top:1px solid var(--borda);}
+.vt-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--txt);margin-bottom:7px;}
+.vt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
+.vslot{background:var(--c3);border:1px dashed var(--borda);border-radius:7px;aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;position:relative;overflow:hidden;transition:.15s;}
+.vslot:hover{border-color:var(--lar);}
+.vslot input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.vslot video,.vslot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none;}
+.vi{font-size:16px;color:var(--txt);position:relative;z-index:0;}
+.vt2{font-size:9px;color:var(--txt);position:relative;z-index:0;text-align:center;padding:0 4px;}
+/* TREINOS */
+.ttabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.ttab{padding:8px 16px;border:1px solid var(--borda);border-radius:7px;background:transparent;color:var(--txt);font-family:"Syne",sans-serif;font-weight:700;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.15s;}
+.ttab.on{background:var(--lar);color:#fff;border-color:var(--lar);}
+.ttab-inp{background:transparent;border:none;color:inherit;font-family:"Syne",sans-serif;font-weight:700;font-size:12px;width:80px;outline:none;}
+.ttab-del{font-size:14px;opacity:.6;cursor:pointer;line-height:1;}
+.add-treino{padding:7px 12px;border:1px dashed var(--borda);border-radius:7px;background:transparent;color:var(--txt);font-size:12px;cursor:pointer;white-space:nowrap;}
+.add-treino:hover{border-color:var(--lar);color:var(--lar);}
+.sem-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.stab{padding:6px 13px;border:1px solid var(--borda);border-radius:20px;background:transparent;color:var(--txt);font-size:12px;cursor:pointer;transition:.15s;}
+.stab.on{background:var(--az);color:#fff;border-color:var(--az);}
+.add-sem{padding:6px 10px;border:1px dashed var(--borda);border-radius:20px;background:transparent;color:var(--txt);font-size:12px;cursor:pointer;}
+.add-sem:hover{border-color:var(--az);color:var(--az);}
+.ex-header{display:grid;grid-template-columns:1fr 52px 52px 52px 52px 26px;gap:7px;padding:4px 12px;margin-bottom:4px;}
+.xh{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--txt);text-align:center;}
+.xh:first-child{text-align:left;}
+.ex-lista{display:flex;flex-direction:column;gap:5px;}
+.xi{background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:9px 11px;display:grid;grid-template-columns:1fr 52px 52px 52px 52px 26px;gap:7px;align-items:center;transition:.15s;}
+.xi:hover{border-color:rgba(255,107,43,.3);}
+.xi.corr{border-left:3px solid var(--az);}
+.xi.lib{border-left:3px solid var(--c3);}
+.xnome{background:transparent;border:none;color:var(--br);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;width:100%;outline:none;padding:2px 0;}
+.xnome:focus{border-bottom:1px solid var(--lar);}
+.xobs{background:transparent;border:none;color:var(--txt);font-family:"DM Sans",sans-serif;font-size:11px;width:100%;outline:none;padding:1px 0;margin-top:2px;}
+.xcol{display:flex;flex-direction:column;}
+.xnum{background:var(--c3);border:1px solid var(--borda);border-radius:5px;padding:5px 3px;font-family:"Syne",sans-serif;font-weight:700;font-size:12px;text-align:center;width:100%;outline:none;color:var(--lar);}
+.xnum.az{color:var(--az);}
+.xdel{background:transparent;border:none;color:var(--txt);cursor:pointer;font-size:16px;padding:2px;}
+.xdel:hover{color:#ff4444;}
+.add-ex{display:flex;align-items:center;gap:6px;padding:9px;border:1px dashed var(--borda);border-radius:7px;background:transparent;color:var(--txt);font-size:12px;cursor:pointer;transition:.15s;margin-top:7px;width:100%;justify-content:center;}
+.add-ex:hover{border-color:var(--lar);color:var(--lar);}
+.fase-div{font-family:"Syne",sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--txt);padding:10px 0 6px;border-bottom:1px solid var(--borda);margin-bottom:5px;}
+.banco-wrap{background:rgba(30,111,217,.06);border:1px solid rgba(30,111,217,.2);border-radius:8px;padding:12px;margin-bottom:12px;}
+.banco-busca{width:100%;background:var(--c2);border:1px solid var(--borda);border-radius:6px;padding:8px 11px;color:var(--br);font-size:13px;outline:none;}
+.banco-busca:focus{border-color:var(--az);}
+.banco-res{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;max-height:110px;overflow-y:auto;}
+.bi{padding:4px 10px;border:1px solid rgba(30,111,217,.3);border-radius:20px;background:transparent;color:var(--az);font-size:11px;cursor:pointer;}
+.bi:hover{background:var(--az);color:#fff;}
+/* PSE */
+.pse-esc{display:flex;gap:4px;margin-top:8px;}
+.pb{flex:1;aspect-ratio:1;border:1px solid var(--borda);border-radius:6px;background:transparent;color:var(--txt);font-family:"Syne",sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:.15s;}
+.pb:hover{border-color:var(--lar);color:var(--lar);}
+.pb.on{background:var(--lar);color:#fff;border-color:var(--lar);}
+.pse-ref{font-size:11px;color:var(--txt);margin-top:5px;min-height:16px;}
+.phi{background:var(--c2);border:1px solid var(--borda);border-radius:7px;padding:10px 13px;display:flex;align-items:center;gap:12px;margin-bottom:7px;}
+.phi-num{font-family:"Syne",sans-serif;font-weight:800;font-size:20px;color:var(--lar);min-width:28px;text-align:center;}
+/* ETAPAS */
+.etapas{display:flex;border:1px solid var(--borda);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.etapa{flex:1;padding:10px 4px;text-align:center;background:var(--c1);cursor:pointer;border-right:1px solid var(--borda);transition:.15s;}
+.etapa:last-child{border-right:none;}
+.etapa.on{background:rgba(255,107,43,.07);border-bottom:3px solid var(--lar);}
+.etapa.ok .en{color:var(--az);}
+.en{font-family:"Syne",sans-serif;font-weight:800;font-size:13px;color:var(--txt);line-height:1;}
+.etapa.on .en{color:var(--lar);}
+.enm{font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:var(--txt);margin-top:3px;}
+.etapa.on .enm{color:var(--br);}
+.esec{display:none;}.esec.on{display:block;}
+/* NOTIF */
+.notif{position:fixed;bottom:18px;right:18px;background:var(--lar);color:#fff;padding:10px 16px;border-radius:7px;font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;transform:translateY(70px);opacity:0;transition:.3s;z-index:999;}
+.notif.on{transform:none;opacity:1;}
+/* IA */
+.ia-box{background:rgba(255,107,43,.05);border:1px solid rgba(255,107,43,.2);border-radius:8px;padding:14px;margin-bottom:12px;}
+.ia-tit{font-family:"Syne",sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--lar);margin-bottom:8px;}
+@media(max-width:600px){.ag,.g2,.g3,.lado2,.fp-grid{grid-template-columns:1fr;}.fp-grid{grid-template-columns:1fr 1fr 1fr;}.xi,.ex-header{grid-template-columns:1fr 44px 44px 44px 44px 22px;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="mbtn" onclick="toggleMenu()">&#9776;</button>
+  <div class="logo"><span class="in">IN</span><span class="mv">MOVE</span></div>
+  <div class="lsep"></div><span class="lsub">Sistema de Treino</span>
+  <div class="tr"><button class="bcta" onclick="ir('nova-aval')">+ Avaliacao</button></div>
+</div>
+<div class="ov" id="ov" onclick="fecharMenu()"></div>
+<div class="sb" id="sb">
+  <div class="sb-sec">Principal</div>
+  <div class="sbi on" onclick="ir('dashboard')">&#8853; Dashboard</div>
+  <div class="sbi" onclick="ir('alunos')">&#9711; Alunos</div>
+  <div class="sb-sec">Avaliacao</div>
+  <div class="sbi" onclick="ir('nova-aval')">&#10022; Nova Avaliacao</div>
+  <div class="sb-sec">Treino</div>
+  <div class="sbi" onclick="ir('treino')">&#9654; Treinos</div>
+  <div class="sbi" onclick="ir('pse')">&#127919; PSE</div>
+</div>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+<div class="pg on" id="pg-dashboard">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;">Dashboard</div>
+    <button class="bcta" onclick="ir('nova-aval')">+ Nova Avaliacao</button>
+  </div>
+
+  <!-- STATS -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;" id="dash-stats">
+    <div style="background:var(--c1);border:1px solid var(--borda);border-radius:10px;padding:15px;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--lar);" id="dash-total-alunos">0</div>
+      <div style="color:var(--txt);font-size:11px;margin-top:5px;">Alunos Ativos</div>
+    </div>
+    <div style="background:var(--c1);border:1px solid var(--borda);border-radius:10px;padding:15px;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--az);" id="dash-total-treinos">0</div>
+      <div style="color:var(--txt);font-size:11px;margin-top:5px;">Treinos Criados</div>
+    </div>
+    <div style="background:var(--c1);border:1px solid var(--borda);border-radius:10px;padding:15px;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--lar);" id="dash-total-pse">0</div>
+      <div style="color:var(--txt);font-size:11px;margin-top:5px;">Sessoes Registradas</div>
+    </div>
+    <div style="background:var(--c1);border:1px solid var(--borda);border-radius:10px;padding:15px;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--az);" id="dash-pse-medio">--</div>
+      <div style="color:var(--txt);font-size:11px;margin-top:5px;">PSE Medio</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+    <!-- ULTIMAS AVALIACOES -->
+    <div class="card">
+      <div class="ch"><div class="ct">Ultimas Avaliacoes</div></div>
+      <div class="cb" id="dash-ultimas" style="display:flex;flex-direction:column;gap:0;">
+        <div style="text-align:center;padding:20px;color:var(--txt);">Nenhum aluno ainda</div>
+      </div>
+    </div>
+
+    <!-- PSE RECENTES -->
+    <div class="card">
+      <div class="ch"><div class="ct">PSE Recentes</div><span class="badge ba">Ultimas sessoes</span></div>
+      <div class="cb" id="dash-pse-recentes" style="display:flex;flex-direction:column;gap:7px;">
+        <div style="text-align:center;padding:20px;color:var(--txt);">Nenhum PSE ainda</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ALUNOS -->
+<div class="pg" id="pg-alunos">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;">Alunos</div>
+    <button class="bcta" onclick="ir('nova-aval')">+ Novo Aluno</button>
+  </div>
+  <div class="ag" id="lista-alunos">
+    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--txt);">
+      <div style="font-size:32px;margin-bottom:10px;">&#128101;</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--br);margin-bottom:6px;">Nenhum aluno ainda</div>
+      <div style="font-size:13px;margin-bottom:16px;">Comece adicionando o primeiro aluno</div>
+      <button class="bcta" onclick="ir('nova-aval')">+ Adicionar Primeiro Aluno</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERFIL DO ALUNO -->
+<div class="pg" id="pg-perfil">
+  <div style="background:linear-gradient(135deg,rgba(255,107,43,.08),rgba(30,111,217,.05));border:1px solid var(--borda);border-radius:10px;padding:18px;display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
+    <div id="pf-av" style="width:56px;height:56px;background:var(--c3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--lar);flex-shrink:0;"></div>
+    <div style="flex:1;">
+      <div id="pf-nome" style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;"></div>
+      <div id="pf-sub" style="font-size:12px;color:var(--txt);margin-top:2px;"></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="bsec" onclick="ir('alunos')" style="font-size:11px;padding:7px 12px;">&#8592; Alunos</button>
+      <button class="baz" onclick="irTreinos()" style="font-size:11px;padding:7px 12px;">&#9654; Ver Treinos</button>
+      <button class="bcta" onclick="gerarRelatorio()" style="font-size:11px;padding:7px 12px;">&#128196; Relatorio</button>
+    </div>
+  </div>
+
+  <div class="ptabs">
+    <div class="ptab on" onclick="ptab(this,'pt-fotos')">&#128247; Fotos</div>
+    <div class="ptab" onclick="ptab(this,'pt-prog')">&#128200; Progresso</div>
+    <div class="ptab" onclick="ptab(this,'pt-pse2')">&#127919; PSE</div>
+  </div>
+
+  <div class="psec on" id="pt-fotos">
+    <div class="card">
+      <div class="ch"><div class="ct">Fotos Posturais</div><span id="pf-data-badge" class="badge bcz"></span></div>
+      <div class="cb">
+        <div class="fp-grid">
+          <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">&#129464;</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">FRENTE</div></div></div>
+          <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">&#129464;</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--az)">LADO</div></div></div>
+          <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">&#129464;</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">COSTAS</div></div></div>
+        </div>
+        <div class="card" style="margin-bottom:0;">
+          <div class="ch"><div class="ct">Testes Funcionais</div></div>
+          <div class="cb" id="testes-perfil"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="psec" id="pt-prog">
+    <div class="card">
+      <div class="ch"><div class="ct">Evolucao de Medidas</div><button class="bcta" style="font-size:10px;padding:5px 10px;" onclick="notif('Em breve!')">+ Nova Medicao</button></div>
+      <div class="cb">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;" id="pf-stats">
+          <div style="background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--lar);" id="pf-peso">--</div><div style="font-size:10px;color:var(--txt);text-transform:uppercase;margin-top:2px;">Peso</div></div>
+          <div style="background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--lar);" id="pf-gord">--</div><div style="font-size:10px;color:var(--txt);text-transform:uppercase;margin-top:2px;">Gordura</div></div>
+          <div style="background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--az);" id="pf-musc">--</div><div style="font-size:10px;color:var(--txt);text-transform:uppercase;margin-top:2px;">Musculo</div></div>
+          <div style="background:var(--c2);border:1px solid var(--borda);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--az);" id="pf-imc">--</div><div style="font-size:10px;color:var(--txt);text-transform:uppercase;margin-top:2px;">IMC</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="psec" id="pt-pse2">
+    <div id="pse-hist-perfil" style="display:flex;flex-direction:column;gap:7px;">
+      <div style="text-align:center;padding:30px;color:var(--txt);">Nenhum PSE registrado ainda</div>
+    </div>
+  </div>
+</div>
+
+<!-- NOVA AVALIACAO -->
+<div class="pg" id="pg-nova-aval">
+  <div class="etapas">
+    <div class="etapa on" id="ep1" onclick="etapa(1)"><div class="en">01</div><div class="enm">Dados</div></div>
+    <div class="etapa" id="ep2" onclick="etapa(2)"><div class="en">02</div><div class="enm">Fotos</div></div>
+    <div class="etapa" id="ep3" onclick="etapa(3)"><div class="en">03</div><div class="enm">Testes</div></div>
+    <div class="etapa" id="ep4" onclick="etapa(4)"><div class="en">04</div><div class="enm">Treino</div></div>
+  </div>
+
+  <div class="card esec on" id="sf1">
+    <div class="ch"><div class="ct">&#128100; Dados do Aluno</div></div>
+    <div class="cb">
+      <div class="g2">
+        <div class="fg"><label class="flbl">Nome Completo</label><input class="finp" id="inp-nome" placeholder="Nome do aluno"></div>
+        <div class="fg"><label class="flbl">Data de Nascimento</label><input type="date" class="finp" id="inp-nasc"></div>
+        <div class="fg"><label class="flbl">Sexo</label><select class="fsel" id="inp-sexo"><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
+        <div class="fg"><label class="flbl">Objetivo</label><select class="fsel" id="inp-obj"><option>Hipertrofia</option><option>Emagrecimento</option><option>Qualidade de vida</option><option>Correcao postural</option><option>Reabilitacao</option><option>Performance</option></select></div>
+        <div class="fg"><label class="flbl">Dias de treino / semana</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dias-treino">
+            <button class="op" onclick="sel(this)">2x</button><button class="op on" onclick="sel(this)">3x</button><button class="op" onclick="sel(this)">4x</button><button class="op" onclick="sel(this)">5x</button>
+          </div>
+        </div>
+        <div class="fg gcol"><label class="flbl">Patologias / Restricoes / Queixas de dor</label><textarea class="ftxt" id="inp-patol" placeholder="Ex: hernia de disco, dor lombar, hipertensao..."></textarea></div>
+      </div>
+      <div class="acoes"><button class="bpri" onclick="etapa(2)">Proximo: Fotos &#8594;</button></div>
+    </div>
+  </div>
+
+  <div class="card esec" id="sf2">
+    <div class="ch"><div class="ct">&#128247; Fotos Posturais</div></div>
+    <div class="cb">
+      <div class="fp-grid">
+        <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">&#129464;</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">FRENTE</div></div></div>
+        <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">&#129464;</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--az)">LADO</div></div></div>
+        <div class="fp-card"><div class="fp-slot" onclick="this.querySelector('input').click()"><div class="fp-ico">&#129464;</div><div class="fp-txt">Adicionar</div><input type="file" accept="image/*" onchange="pfPost(this)"><img></div><div class="fp-info"><div class="fp-nome" style="color:var(--lar)">COSTAS</div></div></div>
+      </div>
+      <div class="fg"><label class="flbl">Observacoes Posturais</label><textarea class="ftxt" id="obs-postural" placeholder="Achados posturais..."></textarea></div>
+      <div class="acoes"><button class="bsec" onclick="etapa(1)">&#8592; Voltar</button><button class="bpri" onclick="etapa(3)">Proximo: Testes &#8594;</button></div>
+    </div>
+  </div>
+
+  <div class="card esec" id="sf3">
+    <div class="ch"><div class="ct">&#128300; Testes Funcionais</div><span class="badge bl">Video: frontal / posterior / lateral</span></div>
+    <div class="cb" id="testes-aval"></div>
+  </div>
+
+  <div class="esec" id="sf4">
+    <div class="ia-box">
+      <div class="ia-tit">&#9889; Contexto para Gerar Treinos com IA</div>
+      <div class="g2" style="margin-top:8px;">
+        <div class="fg"><label class="flbl">Semanas de progressao</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="sems-prog">
+            <button class="op" onclick="sel(this)">3</button><button class="op on" onclick="sel(this)">4</button><button class="op" onclick="sel(this)">5</button><button class="op" onclick="sel(this)">6</button>
+          </div>
+        </div>
+        <div class="fg"><label class="flbl">Intensidade alvo (Borg)</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;" id="borg-alvo">
+            <button class="op" onclick="sel(this)">6-7</button><button class="op on" onclick="sel(this)">7-8</button><button class="op" onclick="sel(this)">8-9</button>
+          </div>
+        </div>
+        <div class="fg gcol"><label class="flbl">Observacoes adicionais para a IA</label><textarea class="ftxt" id="ia-ctx" placeholder="Ex: priorizar gluteo, evitar agachamento bilateral, foco em correcao postural..."></textarea></div>
+      </div>
+      <div class="acoes">
+        <button class="bsec" onclick="etapa(3)">&#8592; Voltar</button>
+        <button class="bcta" onclick="salvarAluno()">&#10003; Salvar Aluno e Criar Treinos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TREINOS -->
+<div class="pg" id="pg-treino">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+    <div>
+      <div id="treino-aluno-nome" style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;">Treinos</div>
+      <div style="font-size:12px;color:var(--txt);margin-top:2px;">Edite exercicios, series, reps e carga direto na tabela</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="baz" onclick="salvarTreinos()">&#128190; Salvar</button>
+      <button style="background:rgba(30,111,217,.15);color:var(--az);border:1px solid rgba(30,111,217,.3);padding:9px 14px;border-radius:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;cursor:pointer;" onclick="copiarPromptTreino()">&#129302; Copiar Prompt IA</button>
+    <button class="bcta" onclick="notif('Imprimindo...')">&#128424; Imprimir</button>
+    </div>
+  </div>
+
+  <div class="ttabs" id="treino-tabs-wrap">
+    <button class="add-treino" onclick="addTreino()">+ Novo treino</button>
+  </div>
+
+  <div class="sem-tabs" id="sem-tabs-wrap"></div>
+
+  <div id="treinos-container"></div>
+</div>
+
+<!-- PSE -->
+<div class="pg" id="pg-pse">
+  <div class="g2">
+    <div class="card" style="margin-bottom:0;">
+      <div class="ch"><div class="ct">&#127919; Registrar PSE</div></div>
+      <div class="cb">
+        <div class="fg"><label class="flbl">Aluno</label><select class="fsel" id="pse-aluno-sel"></select></div>
+        <div class="fg"><label class="flbl">Data</label><input type="date" class="finp" id="pse-data"></div>
+        <div class="fg"><label class="flbl">Treino realizado</label><select class="fsel" id="pse-treino-sel"></select></div>
+        <div class="fg"><label class="flbl">Semana</label><select class="fsel" id="pse-sem-sel"><option>Semana 1</option><option>Semana 2</option><option>Semana 3</option><option>Semana 4</option></select></div>
+        <div class="fg" style="margin-bottom:6px;"><label class="flbl">Percepcao de Esforco - Borg 1-10</label></div>
+        <div class="pse-esc" id="pse-esc">
+          <button class="pb" onclick="sp(this,1)">1</button><button class="pb" onclick="sp(this,2)">2</button><button class="pb" onclick="sp(this,3)">3</button><button class="pb" onclick="sp(this,4)">4</button><button class="pb" onclick="sp(this,5)">5</button>
+          <button class="pb" onclick="sp(this,6)">6</button><button class="pb" onclick="sp(this,7)">7</button><button class="pb" onclick="sp(this,8)">8</button><button class="pb" onclick="sp(this,9)">9</button><button class="pb" onclick="sp(this,10)">10</button>
+        </div>
+        <div class="pse-ref" id="pse-ref"></div>
+        <div class="fg" style="margin-top:12px;"><label class="flbl">Observacoes</label><textarea class="ftxt" id="pse-obs" placeholder="Como foi a sessao?"></textarea></div>
+        <button class="bpri" style="width:100%;margin-top:4px;" onclick="registrarPSE()">Registrar PSE</button>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="ch"><div class="ct">Historico PSE</div></div>
+      <div class="cb" id="pse-historico">
+        <div style="text-align:center;padding:20px;color:var(--txt);">Nenhum PSE registrado ainda</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="notif" id="notif"></div>
+
+<script>
+// ════════════════════════════════════════
+// BANCO DE DADOS LOCAL (localStorage)
+// ════════════════════════════════════════
+
+const DB = {
+  salvar(chave, valor) {
+    try { localStorage.setItem('inmove_' + chave, JSON.stringify(valor)); return true; }
+    catch(e) { console.error(e); return false; }
+  },
+  carregar(chave, padrao = null) {
+    try {
+      const v = localStorage.getItem('inmove_' + chave);
+      return v ? JSON.parse(v) : padrao;
+    } catch(e) { return padrao; }
+  }
+};
+
+// ════════════════════════════════════════
+// ESTADO GLOBAL
+// ════════════════════════════════════════
+
+let alunos = DB.carregar('alunos', []);
+let alunoAtual = null;
+let treinosAtual = [];
+let pseList = DB.carregar('pse', []);
+let treinoContador = 0;
+let semanaAtual = 1;
+let treinoAbertoIdx = 0;
+
+// ════════════════════════════════════════
+// BANCO DE EXERCICIOS INMOVE
+// ════════════════════════════════════════
+
+const BANCO = [
+  // Liberacao
+  'Rolo - Quadrado Lombar','Rolo - Gluteo','Rolo - Panturrilha','Rolo - Trato Iliotibial',
+  'Rolo - Peitoral','Rolo - Dorsal','Rolo - Eretores','Rolo - Trapezio','Bola - Arco Plantar',
+  // Mobilidade
+  'Mobilidade de Tornozelo com Resistencia','Mobilidade 90/90 Quadril','Rotacao Tridimensional do Quadril',
+  'Dissociacao Torax/Lombar (Gato-Camelo)','Expansao Toracica com Rolo','CARs de Quadril','CARs de Ombro',
+  'Mobilidade Toracica com Bastao','Volta ao Mundo Quadril','Mobilidade de Ombro com Bastao',
+  'Mobilidade Quadril Enfase Quadriceps','Leg Lower com Elastico','Mobilidade Tornozelo Parede',
+  // Ativacao
+  'Ativacao de Gluteo Medio (Side Steps)','Ativacao Gluteo Medio (Clamshell)','Elevacao Pelvica Unilateral',
+  'Dead Bug','Bird-Dog','Prancha com Bracos Estendidos','Ostra com Mini Band','Cook Bridge com Mini Band',
+  'Ativacao Escapular Y no Chao','Ativacao Escapular T','Dead Bug com Elastico',
+  // Corretivos
+  'Face Pull com Faixa','Escapular Y + T com Faixa','Serrátil (Wall Slide)','Superman com Rotacao',
+  'Pallof Press','Perdigueiro','Hip Hinge com Elastico','Roll Out','Shoulder Tap Quadrupede',
+  // Membros Inferiores
+  'Agachamento Livre','Agachamento Bulgaro','Agachamento Goblet','Agachamento Sumo Halter',
+  'Leg Press 45','Hip Thrust com Barra','Hip Thrust Unilateral','Levantamento Terra',
+  'Terra Romeno','Terra Sumo','Stiff Unilateral com Halter','Afundo com Halter','Passada com Halter',
+  'Passada Lateral','Afundo Reverso','Box Jump','Front Squat','Lateral Squat Dinamico',
+  'Cadeira Extensora','Mesa Flexora','Cadeira Flexora','Cadeira Abdutora','Leg Curl Excentrico',
+  'Flexora na Bola','Flexora no Slide','Gluteo no Cabo (Coice)','Frog com Caneleira',
+  'Elevacao Pelvica Barra','Elevacao Pelvica na Bola',
+  // Superiores - Empurra
+  'Supino Inclinado com Halter','Supino Reto com Barra','Supino Declinado','Supino Inclinado Barra Guiada',
+  'Supino Inclinado Articulado Maquina','Crucifixo Inclinado','Crucifixo Reto Halteres','Peck Deck',
+  'Desenvolvimento com Halter','Desenvolvimento Unilateral','Desenvolvimento Maquina Aberto',
+  'Elevacao Lateral','Elevacao Frontal','Crucifixo Inverso','Triceps Testa','Triceps Corda',
+  'Triceps Pulley','Triceps Banco','Triceps Frances Halteres','Push Up Weighted','Flexao de Bracos',
+  // Superiores - Puxa
+  'Barra Fixa Pronada','Barra Fixa Supinada','Remada Curvada com Barra','Remada Curvada Supinada',
+  'Remada Unilateral com Halter','Remada Fechada Maquina','Remada Horizontal Aberta com Barra',
+  'Remada Baixa Supinada','Puxador Frente Supinado','Puxador Frente Pronado','Puxador Frente Triangulo',
+  'Rosca Direta com Barra','Rosca Scott','Rosca Biceps com Halter','Rosca Martelo',
+  'Rosca Bco Inclinado','Rosca Biceps Cabo',
+  // Core
+  'Prancha Frontal','Prancha Lateral','Prancha Frontal com Variacao','Abdominal Bola',
+  'Dead Bug com Faixa','Roll Out Pernas Estendidas','L-Sit Up','Abdominal Barra Fixa',
+  'Escalador','Pallof Press Split Position',
+  // Metabolico / Funcional
+  'Wall Ball','Burpee','Kettlebell Swing','Slam Ball','Inchworm Walk','Farmer Carry',
+  'Turkish Get Up','Hang Clean','HK Press Landmine','Snatch Dumbell',
+  'Corda Naval','Slam to Toss Side','Lateral Bound','Skipping',
+  // Cardio
+  'Esteira Inclinada','Bike Ergometrica','Remo Ergometrico','Corrida'
+];
+
+// ════════════════════════════════════════
+// NAVEGACAO
+// ════════════════════════════════════════
+
+function ir(id) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.sbi').forEach(i => i.classList.remove('on'));
+  document.getElementById('pg-' + id).classList.add('on');
+  fecharMenu();
+
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'alunos') renderAlunos();
+  if (id === 'treino') renderTreinoPage();
+  if (id === 'pse') renderPSEPage();
+}
+
+function toggleMenu() { document.getElementById('sb').classList.toggle('on'); document.getElementById('ov').classList.toggle('on'); }
+function fecharMenu() { document.getElementById('sb').classList.remove('on'); document.getElementById('ov').classList.remove('on'); }
+
+// ════════════════════════════════════════
+// ALUNOS
+// ════════════════════════════════════════
+
+function renderAlunos() {
+  const cont = document.getElementById('lista-alunos');
+  if (!alunos.length) {
+    cont.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--txt);">
+        <div style="font-size:32px;margin-bottom:10px;">&#128101;</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--br);margin-bottom:6px;">Nenhum aluno ainda</div>
+        <div style="font-size:13px;margin-bottom:16px;">Comece adicionando o primeiro aluno</div>
+        <button class="bcta" onclick="ir('nova-aval')">+ Adicionar Primeiro Aluno</button>
+      </div>`;
+    return;
+  }
+
+  cont.innerHTML = alunos.map((a, i) => {
+    const ini = (a.nome || '?').split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+    const ntreinos = (a.treinos || []).length;
+    return `
+      <div class="alc" onclick="abrirAluno(${i})">
+        <div class="alc-av">${ini}</div>
+        <div class="alc-nome">${a.nome}</div>
+        <div class="alc-info">&#128197; ${a.dataCriacao || ''}<br>&#127919; ${a.objetivo || 'Geral'}<br>&#127947; ${ntreinos} treino(s)</div>
+        <div class="alc-ft"><span class="tag">${a.objetivo || 'Geral'}</span><span class="badge bv">Ativo</span></div>
+      </div>`;
+  }).join('') + `
+    <div class="alc alc-add" onclick="ir('nova-aval')">
+      <div style="font-size:22px;color:var(--txt)">+</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;">Novo Aluno</div>
+      <div style="font-size:12px;color:var(--txt)">Iniciar avaliacao</div>
+    </div>`;
+}
+
+function abrirAluno(idx) {
+  alunoAtual = idx;
+  const a = alunos[idx];
+  const ini = (a.nome || '?').split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+  document.getElementById('pf-av').textContent = ini;
+  document.getElementById('pf-nome').textContent = a.nome;
+  document.getElementById('pf-sub').textContent = 'Avaliacao: ' + (a.dataCriacao || '') + ' · ' + (a.objetivo || 'Geral');
+  document.getElementById('pf-data-badge').textContent = a.dataCriacao || '';
+  document.getElementById('pf-peso').textContent = a.peso ? a.peso + 'kg' : '--';
+  document.getElementById('pf-gord').textContent = a.gordura ? a.gordura + '%' : '--';
+  document.getElementById('pf-musc').textContent = a.muscular ? a.muscular + 'kg' : '--';
+  document.getElementById('pf-imc').textContent = a.imc || '--';
+
+  // PSE do aluno
+  const pseAluno = pseList.filter(p => p.alunoIdx === idx);
+  const histCont = document.getElementById('pse-hist-perfil');
+  if (pseAluno.length === 0) {
+    histCont.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt);">Nenhum PSE registrado ainda</div>';
+  } else {
+    histCont.innerHTML = pseAluno.slice(-5).reverse().map(p => `
+      <div class="phi">
+        <div class="phi-num">${p.valor}</div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:500;">${p.treino} · ${p.semana}</div><div style="font-size:11px;color:var(--txt);">${p.data}</div></div>
+        <span class="badge ${p.valor >= 8 ? 'bam' : p.valor >= 6 ? 'ba' : 'bv'}">${pseTxt[p.valor]}</span>
+      </div>`).join('');
+  }
+
+  // Renderizar testes do perfil
+  renderTestesContainer('testes-perfil');
+
+  treinosAtual = a.treinos || [];
+  ir('perfil');
+  ptab(document.querySelector('.ptab'), 'pt-fotos');
+}
+
+// ════════════════════════════════════════
+// NOVA AVALIACAO
+// ════════════════════════════════════════
+
+function etapa(n) {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('ep' + i).classList.remove('on', 'ok');
+    const s = document.getElementById('sf' + i);
+    if (s) { s.style.display = 'none'; s.classList.remove('on'); }
+  }
+  document.getElementById('ep' + n).classList.add('on');
+  for (let i = 1; i < n; i++) document.getElementById('ep' + i).classList.add('ok');
+  const s = document.getElementById('sf' + n);
+  if (s) { s.style.display = 'block'; s.classList.add('on'); }
+
+  if (n === 3) renderTestesContainer('testes-aval');
+}
+
+function sel(btn) {
+  const parent = btn.closest('[id]') || btn.parentElement;
+  parent.querySelectorAll('.op').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function pfPost(inp) {
+  if (!inp.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const s = inp.closest('.fp-slot');
+    const img = s.querySelector('img');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    s.querySelector('.fp-ico').style.display = 'none';
+    s.querySelector('.fp-txt').style.display = 'none';
+  };
+  r.readAsDataURL(inp.files[0]);
+}
+
+function vmedia(inp) {
+  if (!inp.files[0]) return;
+  const slot = inp.closest('.vslot');
+  const isVideo = inp.files[0].type.startsWith('video');
+  if (isVideo) {
+    const v = slot.querySelector('video');
+    v.src = URL.createObjectURL(inp.files[0]);
+    v.style.display = 'block';
+  } else {
+    const r = new FileReader();
+    r.onload = e => { const img = slot.querySelector('img'); img.src = e.target.result; img.style.display = 'block'; };
+    r.readAsDataURL(inp.files[0]);
+  }
+  slot.querySelector('.vi').style.display = 'none';
+  slot.querySelector('.vt2').style.display = 'none';
+}
+
+const testesConfig = [
+  { nome: 'Agachamento', opcoes: [['Controle Motor', ['Bom', 'Regular', 'Ruim']], ['QL / Pelve', ['Normal', 'QL Esq. Hiperativo', 'QL Dir.']], ['Arco Plantar', ['Normal', 'Pronacao Esq.', 'Pronacao Dir.', 'Bilateral']], ['Dor?', ['Nao', 'Lombar', 'Joelho']]] },
+  { nome: 'Agachamento - Bracos Acima da Cabeca', opcoes: [['Resultado', ['Normal', 'Tronco Esq. Fraco', 'Compensacao Lombar', 'Nao Consegue']]] },
+  { nome: 'Step Down - Joelho / Quadril', opcoes: [['Lado Esquerdo', ['Estavel', 'Valgo dinamico', 'Drop pelvico']], ['Lado Direito', ['Estavel', 'Valgo dinamico', 'Drop pelvico']], ['Dor?', ['Nao', 'Joelho Esq.', 'Joelho Dir.', 'Quadril']]] },
+  { nome: 'Mobilidade de Tornozelo', numeros: [['Tornozelo Direito (cm)', ''], ['Tornozelo Esquerdo (cm)', '']] },
+  { nome: 'Rotacao Toracolimbar', opcoes: [['Rotacao Direita', ['Boa dissociacao', 'Compensacao quadril', 'Amplitude reduzida']], ['Rotacao Esquerda', ['Boa dissociacao', 'Compensacao quadril', 'Amplitude reduzida']]] },
+  { nome: 'Rotacao Tridimensional do Quadril', opcoes: [['Lado Esquerdo', ['Boa amplitude', 'Limitacao leve', 'Limitacao grave', 'Dor']], ['Lado Direito', ['Boa amplitude', 'Limitacao leve', 'Limitacao grave', 'Dor']]] },
+  { nome: 'Prancha Frontal & Lateral', opcoes: [['Prancha Frontal', ['Manteve', 'Com dor', 'Nao manteve']], ['Prancha Lateral', ['Manteve', 'Desequilibrio', 'Com dor']]] },
+  { nome: 'Teste de Adams - Coluna', opcoes: [['Resultado', ['Normal', 'Escoliose funcional', 'Escoliose estrutural', 'Solicitar RX']]] },
+  { nome: 'Lasegue - Pernas Estendidas', opcoes: [['Esquerdo', ['Sem desconforto', 'Amplitude reduzida', 'Dor irradiada']], ['Direito', ['Sem desconforto', 'Amplitude reduzida', 'Dor irradiada']]] }
+];
+
+function renderTestesContainer(containerId) {
+  const cont = document.getElementById(containerId);
+  if (!cont) return;
+  cont.innerHTML = testesConfig.map(t => {
+    let opHTML = '';
+    if (t.opcoes) opHTML = '<div class="lado2">' + t.opcoes.map(([lbl, ops]) =>
+      `<div><div class="llbl">${lbl}</div><div class="opcoes">${ops.map(o => `<button class="op" onclick="sel(this)">${o}</button>`).join('')}</div></div>`
+    ).join('') + '</div>';
+    if (t.numeros) opHTML = '<div class="lado2">' + t.numeros.map(([lbl, val]) =>
+      `<div><div class="llbl">${lbl}</div><input type="number" class="finp" value="${val}" placeholder="cm"></div>`
+    ).join('') + '</div>';
+    return `<div class="tb2">
+      <div class="tnome">${t.nome}</div>
+      ${opHTML}
+      <div class="vt-wrap">
+        <div class="vt-lbl">&#127909; Videos do teste (3-5 seg) ou foto</div>
+        <div class="vt-grid">
+          <div class="vslot" onclick="this.querySelector('input').click()"><div class="vi">&#127909;</div><div class="vt2">Frontal</div><input type="file" accept="video/*,image/*" onchange="vmedia(this)"><video controls></video><img></div>
+          <div class="vslot" onclick="this.querySelector('input').click()"><div class="vi">&#127909;</div><div class="vt2">Posterior</div><input type="file" accept="video/*,image/*" onchange="vmedia(this)"><video controls></video><img></div>
+          <div class="vslot" onclick="this.querySelector('input').click()"><div class="vi">&#127909;</div><div class="vt2">Lateral</div><input type="file" accept="video/*,image/*" onchange="vmedia(this)"><video controls></video><img></div>
+        </div>
+      </div>
+      <div class="fg" style="margin-top:8px;margin-bottom:0;"><label class="flbl">Observacoes</label><input class="finp" placeholder="Achados do teste..."></div>
+    </div>`;
+  }).join('') + `
+    <div class="fg" style="margin-top:4px;"><label class="flbl">Resumo Geral dos Testes</label><textarea class="ftxt" placeholder="Principais achados e prioridades..."></textarea></div>
+    <div class="acoes"><button class="bsec" onclick="etapa(2)">&#8592; Voltar</button><button class="bpri" onclick="etapa(4)">Proximo: Gerar Treinos &#8594;</button></div>`;
+}
+
+async function salvarAluno() {
+  const nome = document.getElementById('inp-nome')?.value?.trim();
+  if (!nome) { alert('Digite o nome do aluno!'); return; }
+
+  const obj = document.getElementById('inp-obj')?.value || 'Geral';
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const dias = document.querySelector('#dias-treino .op.on')?.textContent || '3x';
+  const sems = parseInt(document.querySelector('#sems-prog .op.on')?.textContent || '4');
+  const borg = document.querySelector('#borg-alvo .op.on')?.textContent || '7-8';
+  const ctx = document.getElementById('ia-ctx')?.value || '';
+  const patol = document.getElementById('inp-patol')?.value || '';
+  const obsPost = document.getElementById('obs-postural')?.value || '';
+
+  // Criar treinos iniciais em branco
+  const nTreinos = parseInt(dias);
+  const letras = ['A', 'B', 'C', 'D', 'E', 'F'];
+  const treinos = letras.slice(0, nTreinos).map((l, i) => ({
+    id: i,
+    nome: 'Treino ' + l,
+    borgAlvo: borg,
+    semanas: sems,
+    exercicios: []
+  }));
+
+  const novoAluno = {
+    nome, objetivo: obj, dataCriacao: hoje,
+    diasTreino: dias, semanas: sems, borgAlvo: borg,
+    patologias: patol, obsPostural: obsPost,
+    contextoIA: ctx, treinos,
+    peso: '', gordura: '', muscular: '', imc: '',
+    status: 'ativo'
+  };
+
+  alunos.push(novoAluno);
+  DB.salvar('alunos', alunos);
+
+  notif('Aluno ' + nome + ' salvo!');
+
+  // Abrir instruções para gerar treino com IA
+  if (ctx.trim()) {
+    setTimeout(() => mostrarPromptIA(alunos.length - 1), 800);
+  }
+
+  setTimeout(() => {
+    abrirAluno(alunos.length - 1);
+  }, 1200);
+}
+
+function mostrarPromptIA(alunoIdx) {
+  const a = alunos[alunoIdx];
+  const prompt = "Sou da academia INMOVE. Preciso de treinos para:\n"
+    + "Aluno: " + a.nome + "\n"
+    + "Objetivo: " + a.objetivo + "\n"
+    + "Dias de treino: " + a.diasTreino + "\n"
+    + "Borg alvo: " + a.borgAlvo + "\n"
+    + "Patologias: " + (a.patologias || "nenhuma") + "\n"
+    + "Contexto: " + (a.contextoIA || "") + "\n\n"
+    + "Monte os treinos completos com fases: liberacao, mobilidade, corretivos, principal e core. Use nomenclatura brasileira.";
+  
+  // Copiar prompt para clipboard
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(prompt).then(() => {
+      notif('Prompt copiado! Cole no Claude para gerar os treinos.');
+    });
+  }
+}
+
+// ════════════════════════════════════════
+// TREINOS
+// ════════════════════════════════════════
+
+function copiarPromptTreino() {
+  if (alunoAtual === null || !alunos[alunoAtual]) { notif('Selecione um aluno primeiro!'); return; }
+  const a = alunos[alunoAtual];
+  const prompt = "Sou da academia INMOVE. Preciso de treinos personalizados para:\n"
+    + "Aluno: " + a.nome + "\n"
+    + "Objetivo: " + a.objetivo + "\n"
+    + "Dias de treino: " + (a.diasTreino || '3x') + "\n"
+    + "Borg alvo: " + (a.borgAlvo || '7-8') + "\n"
+    + "Patologias/restricoes: " + (a.patologias || "nenhuma") + "\n"
+    + "Obs postural: " + (a.obsPostural || "nao informado") + "\n"
+    + "Contexto adicional: " + (a.contextoIA || "") + "\n\n"
+    + "Monte " + (a.diasTreino || '3') + " treinos (A, B, C...) completos com fases:\n"
+    + "1. Autoliberacao miofascial\n"
+    + "2. Mobilidade e ativacao\n"
+    + "3. Exercicios corretivos priorizados para as disfuncoes\n"
+    + "4. Treino principal de hipertrofia\n"
+    + "5. Core e controle motor\n\n"
+    + "Use nomenclatura 100% brasileira. Cada treino com 12-16 exercicios.";
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(prompt).then(() => {
+      notif('Prompt copiado! Abra o Claude e cole para gerar os treinos.');
+      alert('Prompt copiado!\n\nAgora:\n1. Abra o Claude (claude.ai)\n2. Cole o texto\n3. Copie os treinos gerados\n4. Adicione os exercicios aqui');
+    });
+  } else {
+    alert('Copie este texto e cole no Claude:\n\n' + prompt);
+  }
+}
+
+function irTreinos() {
+  if (alunoAtual === null) { notif('Selecione um aluno!'); return; }
+  ir('treino');
+}
+
+function renderTreinoPage() {
+  if (alunoAtual !== null && alunos[alunoAtual]) {
+    treinosAtual = JSON.parse(JSON.stringify(alunos[alunoAtual].treinos || []));
+    document.getElementById('treino-aluno-nome').textContent = 'Treinos — ' + alunos[alunoAtual].nome;
+  } else {
+    document.getElementById('treino-aluno-nome').textContent = 'Selecione um aluno primeiro';
+    treinosAtual = [];
+  }
+  treinoAbertoIdx = 0;
+  renderTreinoTabs();
+}
+
+function renderTreinoTabs() {
+  const wrap = document.getElementById('treino-tabs-wrap');
+  wrap.innerHTML = treinosAtual.map((t, i) => `
+    <button class="ttab ${i === treinoAbertoIdx ? 'on' : ''}" data-idx="${i}" onclick="selTreino(${i})">
+      <input class="ttab-inp" value="${t.nome}" onclick="event.stopPropagation()" onblur="renomearTreino(${i},this.value)">
+      <span class="ttab-del" onclick="delTreino(event,${i})">x</span>
+    </button>`).join('') + `<button class="add-treino" onclick="addTreino()">+ Novo treino</button>`;
+
+  renderSemanas();
+  renderExercicios();
+  atualizarPSESel();
+}
+
+function selTreino(idx) {
+  treinoAbertoIdx = idx;
+  renderTreinoTabs();
+}
+
+function renomearTreino(idx, nome) {
+  if (treinosAtual[idx]) { treinosAtual[idx].nome = nome; atualizarPSESel(); }
+}
+
+function delTreino(ev, idx) {
+  ev.stopPropagation();
+  if (treinosAtual.length <= 1) { notif('Precisa ter ao menos 1 treino'); return; }
+  treinosAtual.splice(idx, 1);
+  treinoAbertoIdx = Math.max(0, treinoAbertoIdx - 1);
+  renderTreinoTabs();
+}
+
+function addTreino() {
+  const letra = String.fromCharCode(65 + treinosAtual.length);
+  treinosAtual.push({ id: treinosAtual.length, nome: 'Treino ' + letra, borgAlvo: '7-8', semanas: 4, exercicios: [] });
+  treinoAbertoIdx = treinosAtual.length - 1;
+  renderTreinoTabs();
+  notif('Treino ' + letra + ' criado!');
+}
+
+function renderSemanas() {
+  const t = treinosAtual[treinoAbertoIdx];
+  const sems = t ? t.semanas || 4 : 4;
+  const wrap = document.getElementById('sem-tabs-wrap');
+  wrap.innerHTML = '';
+  for (let i = 1; i <= sems; i++) {
+    const b = document.createElement('button');
+    b.className = 'stab' + (i === semanaAtual ? ' on' : '');
+    b.textContent = 'Semana ' + i;
+    b.onclick = () => { semanaAtual = i; document.querySelectorAll('.stab').forEach(s => s.classList.remove('on')); b.classList.add('on'); };
+    wrap.appendChild(b);
+  }
+  const add = document.createElement('button');
+  add.className = 'add-sem'; add.textContent = '+ Semana';
+  add.onclick = () => { if (t) { t.semanas = (t.semanas || 4) + 1; renderSemanas(); } };
+  wrap.appendChild(add);
+}
+
+function mkEx(n = '', o = '', s = '3', r = '10', c = '', b = '7') {
+  const d = document.createElement('div');
+  d.className = 'xi';
+  d.innerHTML = `
+    <div><input class="xnome" value="${n}" placeholder="Nome do exercicio"><input class="xobs" value="${o}" placeholder="Instrucao tecnica..."></div>
+    <div class="xcol"><input class="xnum" value="${s}"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;margin-top:2px;">Series</div></div>
+    <div class="xcol"><input class="xnum" value="${r}"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;margin-top:2px;">Reps</div></div>
+    <div class="xcol"><input class="xnum" value="${c}" placeholder="--"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;margin-top:2px;">Carga</div></div>
+    <div class="xcol"><input class="xnum az" value="${b}"><div style="font-size:9px;color:var(--txt);text-align:center;text-transform:uppercase;margin-top:2px;">Borg</div></div>
+    <button class="xdel" onclick="this.closest('.xi').remove()">x</button>`;
+  return d;
+}
+
+const faseLabel = { lib: '&#129813; Autoliberacao Miofascial', mob: '&#128309; Mobilidade & Ativacao', corr: '&#128992; Exercicios Corretivos', pri: '&#128994; Treino Principal', core: '&#128309; Core & Controle Motor' };
+
+function renderExercicios() {
+  const t = treinosAtual[treinoAbertoIdx];
+  const cont = document.getElementById('treinos-container');
+  if (!cont) return;
+
+  if (!t) { cont.innerHTML = ''; return; }
+
+  const borgWrap = `<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;"><span style="font-size:11px;color:var(--txt);">Borg Alvo:</span>${['6-7','7-8','8-9','9-10'].map(v => `<button style="padding:4px 10px;border:1px solid var(--borda);border-radius:20px;background:${t.borgAlvo===v?'var(--az)':'transparent'};color:${t.borgAlvo===v?'#fff':'var(--txt)'};font-size:11px;cursor:pointer;" onclick="t=${treinoAbertoIdx};treinosAtual[${treinoAbertoIdx}].borgAlvo='${v}';renderExercicios();">${v}</button>`).join('')}</div>`;
+
+  cont.innerHTML = `
+    <div class="card">
+      <div class="ch"><div class="ct" id="treino-ct-nome">${t.nome}</div>${borgWrap}</div>
+      <div class="cb">
+        <div class="banco-wrap">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--az);margin-bottom:8px;">&#128269; Banco de Exercicios INMOVE</div>
+          <input class="banco-busca" placeholder="Buscar exercicio..." oninput="bancoBusca(this.value)" id="banco-inp">
+          <div class="banco-res" id="banco-res"></div>
+        </div>
+        <div class="ex-header">
+          <div class="xh">Exercicio / Instrucao</div>
+          <div class="xh">Series</div><div class="xh">Reps</div><div class="xh">Carga</div><div class="xh">Borg</div><div></div>
+        </div>
+        <div class="ex-lista" id="ex-lista-atual"></div>
+        <button class="add-ex" onclick="addExercicio()">+ Adicionar exercicio</button>
+      </div>
+    </div>`;
+
+  const lista = document.getElementById('ex-lista-atual');
+  const exs = t.exercicios || [];
+  let faseAtual = null;
+  exs.forEach(e => {
+    if (e.f && e.f !== faseAtual) {
+      faseAtual = e.f;
+      const d = document.createElement('div');
+      d.className = 'fase-div';
+      d.innerHTML = faseLabel[e.f] || e.f;
+      lista.appendChild(d);
+    }
+    const xi = mkEx(e.n, e.o, e.s, e.r, e.c, e.b || '7');
+    if (e.f === 'corr') xi.classList.add('corr');
+    if (e.f === 'lib') xi.classList.add('lib');
+    lista.appendChild(xi);
+  });
+}
+
+function bancoBusca(q) {
+  const res = document.getElementById('banco-res');
+  if (!q || q.length < 2) { res.innerHTML = ''; return; }
+  const found = BANCO.filter(e => e.toLowerCase().includes(q.toLowerCase())).slice(0, 15);
+  res.innerHTML = found.map(e => `<button class="bi" onclick="addExDoBanco('${e.replace(/'/g,"\\'")}',this)">${e}</button>`).join('');
+}
+
+function addExDoBanco(nome) {
+  addExercicio(nome);
+  document.getElementById('banco-inp').value = '';
+  document.getElementById('banco-res').innerHTML = '';
+  notif('Exercicio adicionado!');
+}
+
+function addExercicio(nome = '') {
+  const lista = document.getElementById('ex-lista-atual');
+  if (!lista) return;
+  const xi = mkEx(nome);
+  lista.appendChild(xi);
+  xi.querySelector('.xnome').focus();
+}
+
+function salvarTreinos() {
+  if (alunoAtual === null || !alunos[alunoAtual]) { notif('Selecione um aluno primeiro!'); return; }
+  const lista = document.getElementById('ex-lista-atual');
+  if (!lista) return;
+  const t = treinosAtual[treinoAbertoIdx];
+  if (!t) return;
+
+  t.exercicios = [];
+  lista.querySelectorAll('.xi').forEach(xi => {
+    const n = xi.querySelector('.xnome').value;
+    if (!n.trim()) return;
+    t.exercicios.push({
+      n, o: xi.querySelector('.xobs').value,
+      s: xi.querySelectorAll('.xnum')[0].value,
+      r: xi.querySelectorAll('.xnum')[1].value,
+      c: xi.querySelectorAll('.xnum')[2].value,
+      b: xi.querySelectorAll('.xnum')[3].value
+    });
+  });
+
+  alunos[alunoAtual].treinos = JSON.parse(JSON.stringify(treinosAtual));
+  DB.salvar('alunos', alunos);
+  notif('Treinos de ' + alunos[alunoAtual].nome + ' salvos!');
+}
+
+// ════════════════════════════════════════
+// PSE
+// ════════════════════════════════════════
+
+const pseTxt = ['', 'Repouso', 'Muito leve', 'Leve', 'Confortavel', 'Moderado', 'Lig. intenso', 'Intenso', 'Muito intenso', 'Ext. intenso', 'Maximo'];
+
+function sp(btn, n) {
+  document.querySelectorAll('.pb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('pse-ref').textContent = n + ' — ' + pseTxt[n];
+}
+
+function atualizarPSESel() {
+  const sel = document.getElementById('pse-aluno-sel');
+  if (!sel) return;
+  sel.innerHTML = alunos.map((a, i) => `<option value="${i}">${a.nome}</option>`).join('') || '<option>Sem alunos</option>';
+  const tsel = document.getElementById('pse-treino-sel');
+  if (tsel && treinosAtual.length > 0) {
+    tsel.innerHTML = treinosAtual.map(t => `<option>${t.nome}</option>`).join('');
+  }
+}
+
+function renderPSEPage() {
+  atualizarPSESel();
+  renderPSEHistorico();
+  const hoje = new Date().toISOString().split('T')[0];
+  const d = document.getElementById('pse-data');
+  if (d) d.value = hoje;
+}
+
+function renderPSEHistorico() {
+  const cont = document.getElementById('pse-historico');
+  if (!cont) return;
+  if (!pseList.length) {
+    cont.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt);">Nenhum PSE registrado ainda</div>';
+    return;
+  }
+  cont.innerHTML = pseList.slice(-10).reverse().map(p => `
+    <div class="phi">
+      <div class="phi-num">${p.valor}</div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:500;">${p.alunoNome} — ${p.treino}</div><div style="font-size:11px;color:var(--txt);">${p.data} · ${p.semana}</div></div>
+      <span class="badge ${p.valor >= 8 ? 'bam' : p.valor >= 6 ? 'ba' : 'bv'}">${pseTxt[p.valor]}</span>
+    </div>`).join('');
+}
+
+function registrarPSE() {
+  const alunoIdx = parseInt(document.getElementById('pse-aluno-sel')?.value);
+  const ativo = document.querySelector('.pb.on');
+  if (!ativo) { notif('Selecione o valor do PSE!'); return; }
+  const valor = parseInt(ativo.textContent);
+  const treino = document.getElementById('pse-treino-sel')?.value || '';
+  const semana = document.getElementById('pse-sem-sel')?.value || 'Semana 1';
+  const data = document.getElementById('pse-data')?.value || new Date().toLocaleDateString('pt-BR');
+  const obs = document.getElementById('pse-obs')?.value || '';
+  const alunoNome = alunos[alunoIdx]?.nome || '';
+
+  pseList.push({ alunoIdx, alunoNome, valor, treino, semana, data, obs });
+  DB.salvar('pse', pseList);
+  renderPSEHistorico();
+  document.querySelectorAll('.pb').forEach(b => b.classList.remove('on'));
+  document.getElementById('pse-ref').textContent = '';
+  if (document.getElementById('pse-obs')) document.getElementById('pse-obs').value = '';
+  notif('PSE ' + valor + ' registrado para ' + alunoNome + '!');
+}
+
+// ════════════════════════════════════════
+// RELATORIO
+// ════════════════════════════════════════
+
+function gerarRelatorio() {
+  if (alunoAtual === null) return;
+  const a = alunos[alunoAtual];
+  const pseAluno = pseList.filter(p => p.alunoIdx === alunoAtual);
+  const pse7 = pseAluno.slice(-7);
+  const pse7Text = pse7.length
+    ? pse7.map(p => '<div>' + p.treino + ' (' + p.semana + '): <strong style="color:#FF6B2B">' + p.valor + '/10 — ' + pseTxt[p.valor] + '</strong> · ' + p.data + '</div>').join('')
+    : '<div>Nenhum PSE registrado</div>';
+
+  const w = window.open('', '_blank');
+  const conteudo = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatorio INMOVE - ' + a.nome + '</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">'
+    + '<style>body{font-family:DM Sans,sans-serif;padding:28px;max-width:700px;margin:0 auto;font-size:13px;line-height:1.6;color:#111;}'
+    + '.logo{font-family:Syne,sans-serif;font-weight:800;font-size:22px;letter-spacing:-1px;}'
+    + '.in{color:#FF6B2B;}.mv{color:#1E6FD9;}'
+    + '.header{display:flex;justify-content:space-between;border-bottom:2px solid #FF6B2B;padding-bottom:14px;margin-bottom:18px;}'
+    + '.sec{font-family:Syne,sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#FF6B2B;margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid #eee;}'
+    + '.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}'
+    + '.item{background:#f9f9f9;border-radius:7px;padding:10px 12px;}'
+    + '.item-lbl{font-size:10px;text-transform:uppercase;color:#888;margin-bottom:3px;}'
+    + '.item-val{font-family:Syne,sans-serif;font-weight:700;font-size:14px;color:#FF6B2B;}'
+    + '</style></head><body>'
+    + '<div class="header"><div><div class="logo"><span class="in">IN</span><span class="mv">MOVE</span></div><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Relatorio de Evolucao</div></div>'
+    + '<div style="text-align:right;"><div style="font-size:12px;color:#888;">Prof. Loren Will</div><div style="font-size:11px;color:#aaa;">' + new Date().toLocaleDateString('pt-BR') + '</div></div></div>'
+    + '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:16px;margin-bottom:3px;">' + a.nome + '</div>'
+    + '<div style="font-size:12px;color:#666;margin-bottom:16px;">Objetivo: ' + a.objetivo + ' · Avaliacao: ' + a.dataCriacao + '</div>'
+    + '<div class="sec">Dados da Avaliacao</div>'
+    + '<div class="grid">'
+    + '<div class="item"><div class="item-lbl">Objetivo</div><div class="item-val">' + (a.objetivo || '--') + '</div></div>'
+    + '<div class="item"><div class="item-lbl">Dias de Treino</div><div class="item-val">' + (a.diasTreino || '--') + '</div></div>'
+    + '<div class="item"><div class="item-lbl">Patologias</div><div class="item-val" style="font-size:11px;color:#333;">' + (a.patologias || 'Nenhuma informada') + '</div></div>'
+    + '<div class="item"><div class="item-lbl">Obs. Postural</div><div class="item-val" style="font-size:11px;color:#333;">' + (a.obsPostural || 'Nao informado') + '</div></div>'
+    + '</div>'
+    + '<div class="sec">Treinos Prescritos</div>'
+    + '<div>' + (a.treinos || []).map(t => '<div style="margin-bottom:6px;">&#9654; <strong>' + t.nome + '</strong> — Borg alvo: ' + t.borgAlvo + ' · ' + (t.exercicios || []).length + ' exercicios</div>').join('') + '</div>'
+    + '<div class="sec">Percepcao de Esforco — Ultimas 7 Sessoes</div>'
+    + '<div>' + pse7Text + '</div>'
+    + '<div style="margin-top:20px;padding-top:14px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:11px;color:#aaa;">'
+    + '<span>INMOVE — Sistema de Avaliacao e Treino</span><span>Prof. Loren Will · ' + new Date().toLocaleDateString('pt-BR') + '</span></div>'
+    + '</body></html>';
+
+  w.document.write(conteudo);
+  w.document.close();
+  w.print();
+}
+
+// ════════════════════════════════════════
+// TABS PERFIL
+// ════════════════════════════════════════
+
+function ptab(btn, secId) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.psec').forEach(s => s.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(secId).classList.add('on');
+}
+
+// ════════════════════════════════════════
+// NOTIF
+// ════════════════════════════════════════
+
+function notif(msg) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('on');
+  setTimeout(() => n.classList.remove('on'), 2800);
+}
+
+// ════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════
+
+function renderDashboard() {
+  // Stats
+  const totalAlunos = alunos.length;
+  const totalTreinos = alunos.reduce((s, a) => s + (a.treinos || []).length, 0);
+  const totalPSE = pseList.length;
+  const pseMedio = totalPSE ? (pseList.reduce((s, p) => s + p.valor, 0) / totalPSE).toFixed(1) : '--';
+
+  document.getElementById('dash-total-alunos').textContent = totalAlunos;
+  document.getElementById('dash-total-treinos').textContent = totalTreinos;
+  document.getElementById('dash-total-pse').textContent = totalPSE;
+  document.getElementById('dash-pse-medio').textContent = pseMedio;
+
+  // Ultimas avaliacoes
+  const ultCont = document.getElementById('dash-ultimas');
+  if (!alunos.length) {
+    ultCont.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt);">Nenhum aluno ainda</div>';
+  } else {
+    ultCont.innerHTML = alunos.slice(-5).reverse().map((a, i) => {
+      const idx = alunos.length - 1 - i;
+      const ini = (a.nome || '?').split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+      return \`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--borda);cursor:pointer;" onclick="abrirAluno(\${idx})">
+        <div style="width:32px;height:32px;background:var(--c3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:var(--lar);flex-shrink:0;">\${ini}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;">\${a.nome}</div>
+          <div style="font-size:11px;color:var(--txt);">\${a.objetivo || 'Geral'} · \${a.dataCriacao || ''}</div>
+        </div>
+        <span class="badge bv">Ativo</span>
+      </div>\`;
+    }).join('');
+  }
+
+  // PSE recentes
+  const pseCont = document.getElementById('dash-pse-recentes');
+  if (!pseList.length) {
+    pseCont.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt);">Nenhum PSE ainda</div>';
+  } else {
+    pseCont.innerHTML = pseList.slice(-5).reverse().map(p => \`
+      <div class="phi">
+        <div class="phi-num">\${p.valor}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;">\${p.alunoNome} — \${p.treino}</div>
+          <div style="font-size:11px;color:var(--txt);">\${p.data} · \${p.semana}</div>
+        </div>
+        <span class="badge \${p.valor >= 8 ? 'bam' : p.valor >= 6 ? 'ba' : 'bv'}">\${pseTxt[p.valor]}</span>
+      </div>\`).join('');
+  }
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+
+renderDashboard();
+</script>
+</body>
+</html>
